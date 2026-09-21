@@ -111,7 +111,7 @@
       });
 
       const discordClientId = "1549947934920024064";
-      const discordRedirectUri = window.location.origin;
+      const discordRedirectUri = `${window.location.origin}/dashboard/`;
       const loginLinks = document.querySelectorAll(".js-login-link");
       const profileLink = document.querySelector(".profile-link");
       const profileStorageKey = "core_profile";
@@ -124,7 +124,7 @@
         authUrl.searchParams.set("client_id", discordClientId);
         authUrl.searchParams.set("redirect_uri", discordRedirectUri);
         authUrl.searchParams.set("response_type", "token");
-        authUrl.searchParams.set("scope", "identify email");
+        authUrl.searchParams.set("scope", "identify email guilds");
         authUrl.searchParams.set("state", state);
         window.location.assign(authUrl.toString());
       }

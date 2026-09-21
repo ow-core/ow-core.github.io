@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050505" />
+    <title>Core / Dashboard</title>
+    <link rel="icon" href="../core.png" type="image/png" />
+    <style>
+      :root { --ink:#f4f4f4; --paper:#050505; --paper-deep:#171717; --muted:#8b8b8b; --line:rgba(255,255,255,.14); --accent:#e5b567; --green:#3ecf8e; --bad:#f2555a; }
+      [data-theme="light"] { --ink:#171817; --paper:#e8e4db; --paper-deep:#d8d3c8; --muted:#686861; --line:rgba(23,24,23,.18); --accent:#e85d35; --green:#638b6b; }
+      * { box-sizing:border-box; }
+      html { scroll-behavior:smooth; }
+      body { margin:0; color:var(--ink); background:var(--paper); font-family:Arial,Helvetica,sans-serif; line-height:1.55; transition:background .25s ease,color .25s ease; }
+      body::before { content:""; position:fixed; inset:0; z-index:-1; opacity:.13; pointer-events:none; background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px); background-size:64px 64px; mask-image:linear-gradient(to bottom,#000,transparent 75%); }
+      a { color:inherit; text-decoration:none; }
+      button { font:inherit; }
+      .container { width:min(1180px,calc(100% - 48px)); margin:0 auto; }
+      header { position:sticky; top:0; z-index:10; border-bottom:1px solid var(--line); background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(18px); }
+      .nav { min-height:72px; display:flex; align-items:center; gap:24px; }
+      .brand { display:flex; align-items:center; gap:10px; font-size:.78rem; font-weight:800; letter-spacing:.15em; text-transform:uppercase; }
+      .brand img { width:28px; height:28px; object-fit:contain; filter:grayscale(1) brightness(3); }
+      .brand-rule { width:22px; height:1px; background:var(--muted); }
+      .nav-links { display:flex; gap:24px; margin-left:18px; color:var(--muted); font-size:.73rem; }
+      .nav-links a:hover { color:var(--ink); }
+      .theme-toggle,.logout { min-height:36px; border:1px solid var(--line); border-radius:7px; color:var(--ink); background:transparent; cursor:pointer; }
+      .theme-toggle { width:36px; display:inline-flex; align-items:center; justify-content:center; margin-left:auto; }
+      .logout { padding:0 13px; font-size:.7rem; font-weight:700; }
+      .logout:hover,.theme-toggle:hover { border-color:var(--ink); }
+      .account { display:flex; align-items:center; gap:9px; color:var(--muted); font-size:.73rem; font-weight:700; }
+      .account img { width:30px; height:30px; border:1px solid var(--line); border-radius:50%; object-fit:cover; }
+      .dashboard { padding:76px 0 120px; }
+      .eyebrow,.section-label { color:var(--accent); font-size:.65rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+      .heading { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:42px; }
+      h1 { max-width:720px; margin:12px 0 0; font-size:clamp(3.2rem,7vw,6.6rem); letter-spacing:-.08em; line-height:.86; }
+      .intro { max-width:400px; margin:0; color:var(--muted); font-size:.87rem; }
+      .intro strong { color:var(--ink); }
+      .toolbar { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:16px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+      .count { color:var(--muted); font-size:.68rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .premium { color:var(--accent); font-size:.68rem; font-weight:700; }
+      .server-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:14px; }
+      .server-card { display:grid; grid-template-columns:48px 1fr auto; gap:14px; align-items:center; min-height:94px; padding:16px; border:1px solid var(--line); border-radius:8px; color:var(--ink); background:linear-gradient(145deg,var(--paper-deep),var(--paper)); cursor:pointer; text-align:left; }
+      .server-card:hover,.server-card.is-selected { border-color:var(--accent); }
+      .server-icon { display:flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:12px; color:var(--ink); background:var(--accent); font-size:1.1rem; font-weight:800; }
+      .server-name { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:.93rem; font-weight:800; }
+      .server-meta { display:block; margin-top:4px; color:var(--muted); font-size:.68rem; }
+      .server-status { color:var(--green); font-size:.6rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+      .empty,.error { padding:42px 0; color:var(--muted); border-bottom:1px solid var(--line); }
+      .error { color:var(--bad); }
+      .login { display:none; min-height:calc(100vh - 72px); place-items:center; text-align:center; }
+      .login.is-visible { display:grid; }
+      .login h1 { font-size:clamp(3rem,8vw,6rem); }
+      .button { display:inline-flex; align-items:center; justify-content:center; min-height:42px; margin-top:24px; padding:0 17px; border:1px solid var(--ink); border-radius:7px; color:var(--paper); background:var(--ink); font-size:.73rem; font-weight:800; cursor:pointer; }
+      @media (max-width:760px) { .container { width:min(100% - 30px,560px); } .nav { flex-wrap:wrap; padding:15px 0; } .nav-links { order:3; width:100%; justify-content:space-between; gap:12px; margin-left:0; font-size:.65rem; } .account { margin-left:auto; } .heading { align-items:flex-start; flex-direction:column; } .server-grid { grid-template-columns:1fr; } .server-card { grid-template-columns:42px 1fr auto; } .server-icon { width:42px; height:42px; } .premium { text-align:right; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container nav">
+        <a href="../" class="brand" aria-label="Core home"><img src="../core.png" alt="" /><span>Core</span><span class="brand-rule" aria-hidden="true"></span></a>
+        <nav class="nav-links" aria-label="Dashboard navigation"><a href="../">Home</a><a href="#servers">Servers</a><a href="#premium">Premium</a></nav>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch theme"><span aria-hidden="true">☼</span></button>
+        <div class="account"><img class="account-avatar" alt="" /><span class="account-name"></span></div>
+        <button class="logout" type="button">Log out</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="dashboard" id="servers" hidden>
+        <div class="container">
+          <div class="heading"><div><p class="eyebrow">Core / Dashboard</p><h1>Choose a server<br />to work on.</h1></div><p class="intro">Welcome back, <strong class="username"></strong>. Select a server to open its Core workspace. Free accounts can connect two servers.</p></div>
+          <div class="toolbar"><span class="count">0 of 2 servers selected</span><span class="premium">Core Premium will unlock more server slots.</span></div>
+          <div class="server-grid"></div>
+          <p class="empty" hidden>No manageable Discord servers were found for this account.</p>
+          <p class="error" hidden></p>
+        </div>
+      </section>
+      <section class="login" aria-labelledby="login-title">
+        <div><p class="eyebrow">Core / Authentication</p><h1 id="login-title">Sign in to<br />continue.</h1><p class="intro">Connect Discord to see the servers available to your account.</p><button class="button login-button" type="button">Continue with Discord</button></div>
+      </section>
+    </main>
+
+    <script>
+      const clientId = "1549947934920024064";
+      const redirectUri = `${window.location.origin}/dashboard/`;
+      const profileKey = "core_profile";
+      const stateKey = "core_oauth_state";
+      const selectedKey = "core_selected_servers";
+      const maxFreeServers = 2;
+      const dashboard = document.querySelector(".dashboard");
+      const login = document.querySelector(".login");
+      const serverGrid = document.querySelector(".server-grid");
+      const emptyState = document.querySelector(".empty");
+      const errorState = document.querySelector(".error");
+      const count = document.querySelector(".count");
+
+      const savedTheme = localStorage.getItem("core_theme");
+      if (savedTheme === "light") document.documentElement.dataset.theme = "light";
+      const themeToggle = document.querySelector(".theme-toggle");
+      function updateThemeToggle() {
+        const light = document.documentElement.dataset.theme === "light";
+        themeToggle.setAttribute("aria-label", light ? "Switch to dark theme" : "Switch to light theme");
+        themeToggle.title = light ? "Switch to dark theme" : "Switch to light theme";
+        themeToggle.firstElementChild.textContent = light ? "●" : "☼";
+      }
+      updateThemeToggle();
+      themeToggle.addEventListener("click", () => {
+        const light = document.documentElement.dataset.theme === "light";
+        document.documentElement.dataset.theme = light ? "dark" : "light";
+        localStorage.setItem("core_theme", light ? "dark" : "light");
+        updateThemeToggle();
+      });
+
+      function startLogin() {
+        const state = crypto.randomUUID();
+        sessionStorage.setItem(stateKey, state);
+        const authUrl = new URL("https://discord.com/oauth2/authorize");
+        authUrl.searchParams.set("client_id", clientId);
+        authUrl.searchParams.set("redirect_uri", redirectUri);
+        authUrl.searchParams.set("response_type", "token");
+        authUrl.searchParams.set("scope", "identify email guilds");
+        authUrl.searchParams.set("state", state);
+        window.location.assign(authUrl.toString());
+      }
+
+      function showLoggedIn(profile) {
+        document.querySelector(".account-avatar").src = profile.avatar;
+        document.querySelector(".account-name").textContent = profile.nickname;
+        document.querySelector(".username").textContent = profile.nickname;
+        dashboard.hidden = false;
+        login.classList.remove("is-visible");
+        renderServers(profile);
+      }
+
+      function renderServers(profile) {
+        const selected = JSON.parse(localStorage.getItem(selectedKey) || "[]");
+        const guilds = [...(profile.guilds || [])].sort((first, second) => Number(second.owner) - Number(first.owner) || first.name.localeCompare(second.name));
+        serverGrid.innerHTML = "";
+        emptyState.hidden = guilds.length > 0;
+        guilds.forEach((guild) => {
+          const isSelected = selected.includes(guild.id);
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = `server-card${isSelected ? " is-selected" : ""}`;
+          card.innerHTML = `<span class="server-icon">${guild.name.slice(0, 1).toUpperCase()}</span><span><span class="server-name"></span><span class="server-meta">${guild.owner ? "Owned by you" : "Manageable server"} · Bot presence will be checked when connected</span></span><span class="server-status">${isSelected ? "Selected" : "Select"}</span>`;
+          card.querySelector(".server-name").textContent = guild.name;
+          card.addEventListener("click", () => {
+            const current = JSON.parse(localStorage.getItem(selectedKey) || "[]");
+            if (current.includes(guild.id)) localStorage.setItem(selectedKey, JSON.stringify(current.filter((id) => id !== guild.id)));
+            else if (current.length < maxFreeServers) localStorage.setItem(selectedKey, JSON.stringify([...current, guild.id]));
+            renderServers(profile);
+          });
+          serverGrid.append(card);
+        });
+        count.textContent = `${JSON.parse(localStorage.getItem(selectedKey) || "[]").length} of ${maxFreeServers} servers selected`;
+      }
+
+      async function finishLogin() {
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const accessToken = params.get("access_token");
+        if (!accessToken) return;
+        if (params.get("state") !== sessionStorage.getItem(stateKey)) throw new Error("Invalid Discord login state.");
+        const headers = { Authorization: `Bearer ${accessToken}` };
+        const [userResponse, guildResponse] = await Promise.all([
+          fetch("https://discord.com/api/users/@me", { headers }),
+          fetch("https://discord.com/api/users/@me/guilds", { headers }),
+        ]);
+        if (!userResponse.ok || !guildResponse.ok) throw new Error("Discord account data could not be loaded.");
+        const user = await userResponse.json();
+        const profile = { id:user.id, nickname:user.global_name || user.username, email:user.email || "", avatar:user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128` : `https://cdn.discordapp.com/embed/avatars/${Number(user.discriminator || 0) % 5}.png`, token:accessToken, guilds:await guildResponse.json(), expiresAt:Date.now() + Number(params.get("expires_in") || 604800) * 1000 };
+        localStorage.setItem(profileKey, JSON.stringify(profile));
+        sessionStorage.removeItem(stateKey);
+        history.replaceState(null, "", window.location.pathname);
+        showLoggedIn(profile);
+      }
+
+      document.querySelector(".login-button").addEventListener("click", startLogin);
+      document.querySelector(".logout").addEventListener("click", () => {
+        localStorage.removeItem(profileKey);
+        window.location.reload();
+      });
+      const profile = JSON.parse(localStorage.getItem(profileKey) || "null");
+      if (profile?.expiresAt > Date.now() && profile.guilds) showLoggedIn(profile);
+      else login.classList.add("is-visible");
+      finishLogin().catch((error) => { errorState.hidden = false; errorState.textContent = error.message; login.classList.add("is-visible"); });
+    </script>
+  </body>
+</html>
