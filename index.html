@@ -110,44 +110,84 @@
         updateThemeToggle();
       });
 
-      const backendUrl = window.CORE_BACKEND_URL || "https://bovine-amiable-chalice.ngrok-free.dev";
+      const discordClientId = "1549947934920024064";
+      const discordRedirectUri = window.location.origin;
       const loginLinks = document.querySelectorAll(".js-login-link");
-      const authNote = document.querySelector(".auth-note");
-      loginLinks.forEach((link) => {
-        link.href = `${backendUrl}/auth/login`;
-        link.addEventListener("click", async (event) => {
-          event.preventDefault();
-          try {
-            const healthResponse = await fetch(`${backendUrl}/api/me`, { credentials: "include" });
-            if (!healthResponse.ok) throw new Error("Auth server unavailable");
-            window.location.assign(link.href);
-          } catch {
-            authNote.style.display = "block";
-          }
-        });
-      });
+      const profileLink = document.querySelector(".profile-link");
+      const profileStorageKey = "core_profile";
+      const stateStorageKey = "core_oauth_state";
 
-      // Discord returns to GitHub Pages, then the backend securely exchanges the code.
-      if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
-        window.location.replace(`${backendUrl}/auth/discord/callback${window.location.search}`);
+      function loginWithDiscord() {
+        const state = crypto.randomUUID();
+        sessionStorage.setItem(stateStorageKey, state);
+        const authUrl = new URL("https://discord.com/oauth2/authorize");
+        authUrl.searchParams.set("client_id", discordClientId);
+        authUrl.searchParams.set("redirect_uri", discordRedirectUri);
+        authUrl.searchParams.set("response_type", "token");
+        authUrl.searchParams.set("scope", "identify email");
+        authUrl.searchParams.set("state", state);
+        window.location.assign(authUrl.toString());
       }
 
-      // Load the logged-in Discord profile from the backend session.
-      const profile = JSON.parse(localStorage.getItem("core_profile") || "null");
-      const profileLink = document.querySelector(".profile-link");
-      fetch(`${backendUrl}/api/me`, { credentials: "include" })
-        .then((response) => response.ok ? response.json() : { user: null })
-        .then(({ user }) => {
-          const currentProfile = user || profile;
-          if (!currentProfile || !currentProfile.nickname || !currentProfile.avatar) return;
-          localStorage.setItem("core_profile", JSON.stringify(currentProfile));
-          document.querySelector(".profile-avatar").src = currentProfile.avatar;
-          document.querySelector(".profile-name").textContent = currentProfile.nickname;
-          profileLink.href = currentProfile.url || `${backendUrl}/api/me`;
-          profileLink.classList.add("is-visible");
-          document.querySelectorAll(".js-login-link").forEach((link) => link.style.display = "none");
-        })
-        .catch(() => {});
+      function clearDiscordProfile() {
+        localStorage.removeItem(profileStorageKey);
+        profileLink.classList.remove("is-visible");
+        loginLinks.forEach((link) => link.style.display = "");
+      }
+
+      function displayDiscordProfile(profile) {
+        localStorage.setItem(profileStorageKey, JSON.stringify(profile));
+        document.querySelector(".profile-avatar").src = profile.avatar;
+        document.querySelector(".profile-name").textContent = profile.email || profile.nickname;
+        profileLink.classList.add("is-visible");
+        loginLinks.forEach((link) => link.style.display = "none");
+      }
+
+      async function finishDiscordLogin() {
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const accessToken = params.get("access_token");
+        if (!accessToken) return;
+        if (params.get("state") !== sessionStorage.getItem(stateStorageKey)) {
+          history.replaceState(null, "", window.location.pathname);
+          throw new Error("Invalid Discord login state.");
+        }
+
+        const response = await fetch("https://discord.com/api/users/@me", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (!response.ok) throw new Error("Discord profile request failed.");
+        const user = await response.json();
+        const profile = {
+          id: user.id,
+          nickname: user.global_name || user.username,
+          email: user.email || "",
+          avatar: user.avatar
+            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
+            : `https://cdn.discordapp.com/embed/avatars/${Number(user.discriminator || 0) % 5}.png`,
+          token: accessToken,
+          expiresAt: Date.now() + Number(params.get("expires_in") || 604800) * 1000,
+        };
+        sessionStorage.removeItem(stateStorageKey);
+        history.replaceState(null, "", window.location.pathname);
+        displayDiscordProfile(profile);
+      }
+
+      loginLinks.forEach((link) => {
+        link.href = "https://discord.com/oauth2/authorize";
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          loginWithDiscord();
+        });
+      });
+      profileLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        clearDiscordProfile();
+      });
+
+      const savedProfile = JSON.parse(localStorage.getItem(profileStorageKey) || "null");
+      if (savedProfile?.expiresAt > Date.now() && savedProfile.email) displayDiscordProfile(savedProfile);
+      else clearDiscordProfile();
+      finishDiscordLogin().catch((error) => console.error("[auth] Discord login failed:", error));
     </script>
   </body>
 </html>
