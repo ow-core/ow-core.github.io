@@ -15,11 +15,12 @@
       body::before { content:""; position:fixed; inset:0; z-index:-1; opacity:.22; pointer-events:none; background-image:radial-gradient(rgba(23,24,23,.18) .7px,transparent .7px); background-size:7px 7px; }
       a { color:inherit; text-decoration:none; }
       .container { width:min(1160px,calc(100% - 48px)); margin:0 auto; }
-      header { border-bottom:1px solid var(--line); }
-      .nav { min-height:82px; display:flex; align-items:center; justify-content:space-between; gap:28px; }
+      header { position:sticky; top:0; z-index:10; background:rgba(232,228,219,.92); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+      .nav { min-height:82px; display:flex; align-items:center; gap:28px; }
       .brand { display:flex; align-items:center; gap:10px; font-family:Arial,sans-serif; font-size:.85rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase; }
       .brand img { width:30px; height:30px; object-fit:contain; filter:grayscale(1) contrast(1.5); }
-      .nav-links { display:flex; gap:28px; color:#555650; font-family:Arial,sans-serif; font-size:.78rem; font-weight:700; }
+      .brand-rule { width:28px; height:1px; background:var(--accent); }
+      .nav-links { display:flex; gap:25px; margin-left:18px; color:#555650; font-family:Arial,sans-serif; font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
       .nav-links a,.footer-links a { transition:color .2s ease; }
       .nav-links a:hover,.footer-links a:hover { color:var(--accent); }
       .login-btn,.primary-btn { min-height:42px; display:inline-flex; align-items:center; justify-content:center; padding:0 17px; border:1px solid var(--ink); border-radius:2px; font-family:Arial,sans-serif; font-size:.76rem; font-weight:800; transition:background .2s ease,color .2s ease,transform .2s ease; }
@@ -27,7 +28,7 @@
       .login-btn:hover,.primary-btn:hover { color:var(--paper); background:var(--ink); transform:translateY(-2px); }
       .primary-btn { color:var(--paper); background:var(--ink); }
       .primary-btn:hover { color:var(--ink); background:var(--accent); border-color:var(--accent); }
-      .profile-link { display:none; align-items:center; gap:10px; font-family:Arial,sans-serif; font-size:.78rem; font-weight:700; }
+      .profile-link { display:none; align-items:center; gap:10px; margin-left:auto; font-family:Arial,sans-serif; font-size:.78rem; font-weight:700; }
       .profile-link.is-visible { display:inline-flex; }
       .profile-avatar { width:32px; height:32px; border:1px solid var(--ink); border-radius:50%; object-fit:cover; }
       .hero { padding:106px 0 112px; border-bottom:1px solid var(--line); }
@@ -64,9 +65,9 @@
   <body>
     <header>
       <div class="container nav">
-        <a href="#top" class="brand" aria-label="Core home"><img src="core.png" alt="" /><span>Core</span></a>
-        <nav class="nav-links" aria-label="Main navigation"><a href="#features">Capabilities</a><a href="#workflow">Activity</a><a href="#docs">Docs</a></nav>
-        <a href="#" class="login-btn js-login-link">Login</a>
+        <a href="#top" class="brand" aria-label="Core home"><img src="core.png" alt="" /><span>Core</span><span class="brand-rule" aria-hidden="true"></span></a>
+        <nav class="nav-links" aria-label="Main navigation"><a href="#features">Capabilities</a><a href="#workflow">Activity</a><a href="#docs">Documentation</a></nav>
+        <a href="#" class="primary-btn js-login-link">Open Core</a>
         <a href="#" class="profile-link" aria-label="Open your Core profile"><img class="profile-avatar" alt="" /><span class="profile-name"></span></a>
       </div>
     </header>
