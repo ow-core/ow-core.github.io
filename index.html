@@ -78,19 +78,30 @@
     </main>
     <footer><div class="container footer-inner"><a href="#top" class="brand"><img src="core.png" alt="" /><span>Core</span></a><nav class="footer-links" aria-label="Footer navigation"><a href="#features">Features</a><a href="#workflow">Workflow</a><a href="#" class="js-login-link">Login</a></nav></div></footer>
     <script>
-      const discordLoginUrl = "https://discord.com/oauth2/authorize?client_id=1549947934920024064&response_type=code&redirect_uri=https%3A%2F%2Fow-core.github.io&scope=identify";
-      document.querySelectorAll(".js-login-link").forEach((link) => link.href = discordLoginUrl);
+      const backendUrl = "https://bovine-amiable-chalice.ngrok-free.dev";
+      document.querySelectorAll(".js-login-link").forEach((link) => link.href = `${backendUrl}/auth/login`);
 
-      // The Core app should redirect back with this profile stored after auth.
+      // Discord returns to GitHub Pages, then the backend securely exchanges the code.
+      if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
+        window.location.replace(`${backendUrl}/auth/discord/callback${window.location.search}`);
+      }
+
+      // Load the logged-in Discord profile from the backend session.
       const profile = JSON.parse(localStorage.getItem("core_profile") || "null");
       const profileLink = document.querySelector(".profile-link");
-      if (profile && profile.nickname && profile.avatar) {
-        document.querySelector(".profile-avatar").src = profile.avatar;
-        document.querySelector(".profile-name").textContent = profile.nickname;
-        profileLink.href = profile.url || "/profile";
-        profileLink.classList.add("is-visible");
-        document.querySelectorAll(".js-login-link").forEach((link) => link.style.display = "none");
-      }
+      fetch(`${backendUrl}/api/me`, { credentials: "include" })
+        .then((response) => response.ok ? response.json() : { user: null })
+        .then(({ user }) => {
+          const currentProfile = user || profile;
+          if (!currentProfile || !currentProfile.nickname || !currentProfile.avatar) return;
+          localStorage.setItem("core_profile", JSON.stringify(currentProfile));
+          document.querySelector(".profile-avatar").src = currentProfile.avatar;
+          document.querySelector(".profile-name").textContent = currentProfile.nickname;
+          profileLink.href = currentProfile.url || `${backendUrl}/api/me`;
+          profileLink.classList.add("is-visible");
+          document.querySelectorAll(".js-login-link").forEach((link) => link.style.display = "none");
+        })
+        .catch(() => {});
     </script>
   </body>
 </html>
