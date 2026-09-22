@@ -232,7 +232,7 @@
       function displayDiscordProfile(profile) {
         localStorage.setItem(profileStorageKey, JSON.stringify(profile));
         document.querySelector(".profile-avatar").src = profile.avatar;
-        document.querySelector(".profile-name").textContent = profile.email || profile.nickname;
+        document.querySelector(".profile-name").textContent = profile.nickname;
         profileLink.classList.add("is-visible");
         loginLinks.forEach((link) => link.style.display = "none");
       }
@@ -279,7 +279,7 @@
       });
 
       const savedProfile = JSON.parse(localStorage.getItem(profileStorageKey) || "null");
-      if (savedProfile?.expiresAt > Date.now() && savedProfile.email) displayDiscordProfile(savedProfile);
+      if (savedProfile?.expiresAt > Date.now() && savedProfile.nickname) displayDiscordProfile(savedProfile);
       else clearDiscordProfile();
       finishDiscordLogin().catch((error) => console.error("[auth] Discord login failed:", error));
 
