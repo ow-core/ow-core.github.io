@@ -52,27 +52,77 @@
       .login h1 { font-size:clamp(3rem,8vw,6rem); }
       .button { display:inline-flex; align-items:center; justify-content:center; min-height:42px; margin-top:24px; padding:0 17px; border:1px solid var(--ink); border-radius:7px; color:var(--paper); background:var(--ink); font-size:.73rem; font-weight:800; cursor:pointer; }
       @media (max-width:760px) { .container { width:min(100% - 30px,560px); } .nav { flex-wrap:wrap; padding:15px 0; } .nav-links { order:3; width:100%; justify-content:space-between; gap:12px; margin-left:0; font-size:.65rem; } .account { margin-left:auto; } .heading { align-items:flex-start; flex-direction:column; } .server-grid { grid-template-columns:1fr; } .server-card { grid-template-columns:42px 1fr auto; } .server-icon { width:42px; height:42px; } .premium { text-align:right; } }
+      .notice { padding:8px 18px; border-bottom:1px solid var(--line); color:#d9e6ff; background:#101a31; text-align:center; font-size:.72rem; font-weight:700; }
+      .nav-shell { width:min(1180px,calc(100% - 48px)); margin:10px auto 0; border:1px solid var(--line); border-radius:18px; }
+      header { border-bottom:0; background:transparent; }
+      .nav-shell .nav { padding:0 16px; }
+      .brand { font-size:.92rem; letter-spacing:-.03em; text-transform:none; }
+      .brand-rule { margin-left:4px; }
+      .nav-links { text-transform:none; font-size:.76rem; }
+      .nav-links a { padding:9px 0; }
+      .account { padding:5px 8px 5px 5px; border:1px solid var(--line); border-radius:10px; }
+      .logout { border:0; color:var(--muted); background:transparent; }
+      .dashboard { padding:72px 0 120px; }
+      .dashboard-shell { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:18px; }
+      .dashboard-main { min-width:0; }
+      .hosting-hero { display:flex; align-items:flex-end; justify-content:space-between; gap:28px; min-height:230px; padding:38px; border:1px solid rgba(229,181,103,.2); border-radius:24px; background:radial-gradient(circle at 90% 0%,rgba(229,181,103,.16),transparent 42%),linear-gradient(135deg,#181716,#211b12); }
+      .hosting-hero h1 { max-width:700px; margin:14px 0 12px; font-size:clamp(3rem,6vw,5.5rem); letter-spacing:-.08em; }
+      .hosting-hero .intro { max-width:590px; font-size:1rem; }
+      .hero-actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+      .button,.hero-button { margin-top:0; min-height:44px; padding:0 17px; border:1px solid var(--line); border-radius:10px; color:var(--ink); background:transparent; font-size:.73rem; font-weight:800; cursor:pointer; }
+      .hero-button.primary { color:#17130c; border-color:var(--accent); background:var(--accent); }
+      .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px 0; }
+      .stat,.panel { border:1px solid var(--line); border-radius:18px; background:linear-gradient(145deg,var(--paper-deep),var(--paper)); }
+      .stat { min-height:108px; padding:20px; }
+      .stat-label,.panel-label { color:var(--muted); font-size:.63rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+      .stat-value { display:block; margin:8px 0 3px; font-size:1.75rem; font-weight:800; letter-spacing:-.06em; }
+      .stat-note { color:var(--muted); font-size:.68rem; }
+      .servers-panel { padding:25px; }
+      .panel-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:22px; }
+      .panel-heading h2 { margin:6px 0 0; font-size:1.45rem; letter-spacing:-.05em; }
+      .panel-heading p { margin:6px 0 0; color:var(--muted); font-size:.78rem; }
+      .new-button { min-height:42px; padding:0 15px; border:1px solid var(--accent); border-radius:10px; color:#17130c; background:var(--accent); font-size:.73rem; font-weight:800; cursor:pointer; }
+      .server-grid { margin-top:0; gap:12px; }
+      .server-card { min-height:180px; padding:16px; border-radius:17px; background:rgba(255,255,255,.018); }
+      .server-card:hover,.server-card.is-selected { box-shadow:inset 0 0 0 1px var(--accent); }
+      .server-icon { border-radius:50%; background:var(--accent); color:#17130c; }
+      .server-status { align-self:start; padding-top:4px; }
+      .server-card::after { content:"Open workspace ↗"; grid-column:2 / 4; padding-top:13px; border-top:1px solid var(--line); color:var(--accent); font-size:.7rem; font-weight:800; text-align:right; }
+      .toolbar { margin-bottom:14px; padding:0; border:0; }
+      .sidebar { display:grid; align-content:start; gap:18px; }
+      .side-panel { padding:25px; }
+      .side-panel h2 { margin:10px 0; font-size:1.5rem; letter-spacing:-.05em; }
+      .side-panel p { margin:0 0 18px; color:var(--muted); font-size:.82rem; }
+      .side-callout { padding:15px; border:1px solid var(--line); border-radius:14px; }
+      .side-callout strong { display:block; margin-top:5px; font-size:.84rem; }
+      .side-button { width:100%; min-height:42px; border:1px solid var(--line); border-radius:10px; color:var(--ink); background:transparent; font-size:.72rem; font-weight:800; cursor:pointer; }
+      .side-button.primary { color:#17130c; border-color:var(--accent); background:var(--accent); }
+      .progress { height:7px; margin:18px 0 8px; overflow:hidden; border-radius:99px; background:rgba(255,255,255,.08); }
+      .progress span { display:block; width:18%; height:100%; border-radius:inherit; background:var(--accent); }
+      .side-meta { display:flex; justify-content:space-between; color:var(--muted); font-size:.68rem; }
+      .login { min-height:calc(100vh - 72px); }
+      @media (max-width:900px) { .dashboard-shell { grid-template-columns:1fr; } .sidebar { grid-template-columns:repeat(2,1fr); } }
+      @media (max-width:760px) { .nav-shell { width:min(100% - 30px,560px); } .hosting-hero { align-items:flex-start; flex-direction:column; padding:26px; } .hero-actions { justify-content:flex-start; } .stats { grid-template-columns:repeat(2,1fr); } .servers-panel { padding:18px; } .sidebar { grid-template-columns:1fr; } .panel-heading { flex-direction:column; } .server-card { grid-template-columns:42px 1fr auto; } .server-card::after { grid-column:2 / 4; } }
     </style>
   </head>
   <body>
+    <div class="notice">Core hosting is live. Build, deploy, and manage your Discord systems from one place.</div>
     <header>
-      <div class="container nav">
+      <div class="nav-shell"><div class="container nav">
         <a href="../" class="brand" aria-label="Core home"><img src="../core.png" alt="" /><span>Core</span><span class="brand-rule" aria-hidden="true"></span></a>
         <nav class="nav-links" aria-label="Dashboard navigation"><a href="../">Home</a><a href="#servers">Servers</a><a href="#premium">Premium</a></nav>
         <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch theme"><span aria-hidden="true">☼</span></button>
         <div class="account"><img class="account-avatar" alt="" /><span class="account-name"></span></div>
         <button class="logout" type="button">Log out</button>
-      </div>
+      </div></div>
     </header>
 
     <main>
       <section class="dashboard" id="servers" hidden>
         <div class="container">
-          <div class="heading"><div><p class="eyebrow">Core / Dashboard</p><h1>Choose a server<br />to build on.</h1></div><p class="intro">Welcome back, <strong class="username"></strong>. Select a server to open its Core code workspace. Free accounts can connect two servers.</p></div>
-          <div class="toolbar"><span class="count">0 of 2 servers selected</span><span class="premium">Core Premium will unlock more server slots.</span></div>
-          <div class="server-grid"></div>
-          <p class="empty" hidden>No manageable Discord servers were found for this account.</p>
-          <p class="error" hidden></p>
+          <div class="hosting-hero"><div><p class="eyebrow">Core Discord platform</p><h1>Build your bot.</h1><p class="intro">Welcome back, <strong class="username"></strong>. Choose a server, write the system you need, and keep every deployment under your control.</p></div><div class="hero-actions"><button class="hero-button primary" type="button">+ New system</button><a class="hero-button" href="#servers-list">Documentation</a></div></div>
+          <div class="stats"><div class="stat"><span class="stat-label">Credits</span><strong class="stat-value">∞ Unlimited</strong><span class="stat-note">No daily credit worry</span></div><div class="stat"><span class="stat-label">Active systems</span><strong class="stat-value">0</strong><span class="stat-note">Ready to deploy</span></div><div class="stat"><span class="stat-label">Server slots</span><strong class="stat-value">0/2</strong><span class="stat-note">Free plan included</span></div><div class="stat"><span class="stat-label">Status</span><strong class="stat-value" style="color:var(--green)">Online</strong><span class="stat-note">All systems operational</span></div></div>
+          <div class="dashboard-shell" id="servers-list"><section class="panel servers-panel"><div class="panel-heading"><div><p class="panel-label">Your servers</p><h2>Choose where to build</h2><p>Select a server to open its Core workspace.</p></div><button class="new-button" type="button">+ New system</button></div><div class="toolbar"><span class="count">0 of 2 servers selected</span><span class="premium">Premium unlocks more server slots.</span></div><div class="server-grid"></div><p class="empty" hidden>No manageable Discord servers were found for this account.</p><p class="error" hidden></p></section><aside class="sidebar"><section class="panel side-panel"><p class="panel-label">Server slots</p><h2>2 free slots included</h2><p>Connect the servers you manage and deploy Core systems where they matter.</p><div class="side-callout"><span class="stat-label">Current selection</span><strong>Choose a server to begin</strong></div><button class="side-button" type="button" style="margin-top:18px">Manage slots</button></section><section class="panel side-panel"><p class="panel-label">Core status</p><h2>Everything is ready.</h2><p>Your bot workspace, commands, and systems are available from one dashboard.</p><div class="progress"><span></span></div><div class="side-meta"><span>0 systems deployed</span><span>Live</span></div><button class="side-button primary" type="button" style="margin-top:18px">View documentation</button></section></aside></div>
         </div>
       </section>
       <section class="login" aria-labelledby="login-title">
