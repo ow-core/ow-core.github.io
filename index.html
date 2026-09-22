@@ -93,6 +93,14 @@
       .hero-art,.case,.art-tile,.premium-grid,.module-group { border-radius:16px; }
       .case,.module-group { overflow:hidden; }
       @media (max-width:760px) { header { width:calc(100% - 22px); top:8px; margin-top:8px; } .nav { gap:12px; } .nav-links { gap:12px; } }
+      header { width:auto; margin:0; border:0; border-radius:0; box-shadow:none; background:transparent; }
+      header .nav-shell { width:min(1180px,calc(100% - 48px)); margin:12px auto 0; border:1px solid var(--line); border-radius:20px; box-shadow:0 16px 35px rgba(0,0,0,.28); background:color-mix(in srgb,var(--paper-deep) 92%,transparent); }
+      header .nav-shell .container { width:100%; padding:0 16px; }
+      header .nav-shell .nav { min-height:56px; gap:20px; }
+      header .nav-shell .theme-toggle { margin-left:auto; }
+      header .nav-shell .nav-links { gap:24px; margin-left:10px; font-size:.76rem; }
+      header .nav-shell .nav-links a { padding:9px 0; }
+      @media (max-width:760px) { header .nav-shell { width:calc(100% - 30px); margin-top:8px; } header .nav-shell .nav { gap:12px; } header .nav-shell .nav-links { gap:12px; } }
       .radar-hero { padding:92px 0 76px; border-bottom:1px solid var(--line); }
       .radar-hero-inner { display:grid; grid-template-columns:minmax(0,1fr) minmax(360px,.82fr); gap:64px; align-items:center; }
       .radar-hero h1 { max-width:630px; margin:18px 0 24px; font-size:clamp(3.8rem,7vw,7.2rem); letter-spacing:-.09em; line-height:.86; }
@@ -156,13 +164,13 @@
   </head>
   <body>
     <header>
-      <div class="container nav">
+      <div class="nav-shell"><div class="container nav">
         <a href="#top" class="brand" aria-label="Core home"><img src="core.png" alt="" /><span>Core</span><span class="brand-rule" aria-hidden="true"></span></a>
-        <nav class="nav-links" aria-label="Main navigation"><a href="#cases">Workflows</a><a href="#features">Coding</a><a href="#premium">Premium</a></nav>
+        <nav class="nav-links" aria-label="Main navigation"><a href="#top">Home</a><a href="#cases">Servers</a><a href="#premium">Premium</a></nav>
         <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch theme"><span aria-hidden="true">☼</span></button>
         <a href="#" class="primary-btn js-login-link">Open Core</a>
         <a href="#" class="profile-link" aria-label="Open your Core profile"><img class="profile-avatar" alt="" /><span class="profile-name"></span></a>
-      </div>
+      </div></div>
     </header>
 
     <main id="top">
