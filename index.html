@@ -75,19 +75,90 @@
       header { width:min(750px,calc(100% - 48px)); margin:10px auto 0; border:1px solid var(--line); border-radius:18px; }
       header .container { width:100%; padding:0 16px; }
       .nav { min-height:54px; }
-      .brand { font-size:.92rem; letter-spacing:-.03em; text-transform:none; }
+      .brand { gap:8px; font-size:.92rem; letter-spacing:-.04em; text-transform:none; }
+      .brand img { width:22px; height:22px; filter:none; }
+      .brand-rule { display:none; }
       .brand-rule { margin-left:4px; }
       .nav-links { text-transform:none; font-size:.73rem; }
       .nav-links a { padding:9px 0; }
       @media (max-width:760px) { header { width:calc(100% - 30px); } }
       @media (max-width:760px) { .theme-toggle { margin-left:auto; } .login-btn { margin-left:0; } }
+      header { position:sticky; top:12px; width:min(750px,calc(100% - 30px)); margin:12px auto 0; border:1px solid rgba(255,255,255,.12); border-radius:20px; box-shadow:0 16px 35px rgba(0,0,0,.28); }
+      header .container { width:100%; padding:0 14px; }
+      .nav { min-height:56px; gap:20px; }
+      .brand { gap:9px; }
+      .brand-rule { width:24px; }
+      .nav-links { gap:22px; margin-left:10px; }
+      .login-btn,.primary-btn { border-radius:9px; }
+      .hero-art,.case,.art-tile,.premium-grid,.module-group { border-radius:16px; }
+      .case,.module-group { overflow:hidden; }
+      @media (max-width:760px) { header { width:calc(100% - 22px); top:8px; margin-top:8px; } .nav { gap:12px; } .nav-links { gap:12px; } }
+      .radar-hero { padding:92px 0 76px; border-bottom:1px solid var(--line); }
+      .radar-hero-inner { display:grid; grid-template-columns:minmax(0,1fr) minmax(360px,.82fr); gap:64px; align-items:center; }
+      .radar-hero h1 { max-width:630px; margin:18px 0 24px; font-size:clamp(3.8rem,7vw,7.2rem); letter-spacing:-.09em; line-height:.86; }
+      .radar-hero .hero-copy { max-width:590px; margin-bottom:28px; font-size:1rem; }
+      .radar-hero .hero-actions { margin-bottom:36px; }
+      .hero-art { min-height:330px; padding:14px; border:1px solid var(--line); border-radius:14px; background:linear-gradient(145deg,#171717,#050505); box-shadow:0 24px 70px rgba(0,0,0,.45); transform:rotate(1deg); }
+      .art-top { display:flex; justify-content:space-between; padding:10px 11px 14px; border-bottom:1px solid var(--line); color:var(--muted); font-family:"Courier New",monospace; font-size:.6rem; text-transform:uppercase; }
+      .art-status { color:var(--green); }
+      .art-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; padding:12px 0; }
+      .art-tile { min-height:78px; padding:12px; border:1px solid var(--line); border-radius:7px; background:#0c0c0c; }
+      .art-tile.wide { grid-column:1 / -1; min-height:98px; }
+      .art-label { display:block; margin-bottom:15px; color:var(--muted); font-family:"Courier New",monospace; font-size:.56rem; text-transform:uppercase; }
+      .art-value { display:block; font-size:1rem; font-weight:800; }
+      .art-log { display:grid; grid-template-columns:55px 8px 1fr; gap:8px; align-items:center; margin:8px 0; color:var(--muted); font-family:"Courier New",monospace; font-size:.58rem; }
+      .art-log i { width:6px; height:6px; border-radius:50%; background:var(--green); }
+      .art-log strong { color:var(--ink); font-family:Arial,sans-serif; font-size:.68rem; }
+      .signal { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; padding:30px 0; border-bottom:1px solid var(--line); }
+      .signal strong { display:block; margin-bottom:3px; font-size:1.6rem; letter-spacing:-.06em; }
+      .signal span { color:var(--muted); font-size:.7rem; }
+      .case-section { padding:112px 0 0; }
+      .section-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; margin-bottom:38px; }
+      .section-heading h2 { max-width:620px; margin:12px 0 0; font-size:clamp(2.2rem,5vw,4.5rem); letter-spacing:-.08em; line-height:.9; }
+      .section-heading p { max-width:350px; margin:0; color:var(--muted); font-size:.86rem; }
+      .case { margin-bottom:70px; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:linear-gradient(135deg,var(--paper-deep),var(--paper)); }
+      .case-head { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:17px 20px; border-bottom:1px solid var(--line); }
+      .case-head strong { font-size:.83rem; }
+      .case-head span { color:var(--muted); font-family:"Courier New",monospace; font-size:.62rem; text-transform:uppercase; }
+      .case-body { display:grid; grid-template-columns:205px 1fr; min-height:245px; }
+      .case-meta { padding:20px; border-right:1px solid var(--line); }
+      .case-meta small { display:block; margin-bottom:12px; color:var(--muted); font-family:"Courier New",monospace; font-size:.58rem; letter-spacing:.1em; text-transform:uppercase; }
+      .case-meta strong { display:block; margin-bottom:8px; font-size:1rem; }
+      .case-meta p { margin:0; color:var(--muted); font-size:.73rem; }
+      .case-log { padding:18px 20px; }
+      .case-row { display:grid; grid-template-columns:70px 10px 105px 1fr; gap:10px; align-items:center; padding:11px 0; border-bottom:1px solid rgba(255,255,255,.07); color:var(--muted); font-family:"Courier New",monospace; font-size:.63rem; }
+      .case-row:last-child { border-bottom:0; }
+      .case-row i { width:6px; height:6px; border-radius:50%; background:var(--accent); }
+      .case-row.ok i { background:var(--green); }
+      .case-row strong { color:var(--ink); font-family:Arial,sans-serif; font-size:.72rem; }
+      .modules { padding:40px 0 0; border-top:1px solid var(--line); }
+      .module-group { padding:25px 0 30px; border-bottom:1px solid var(--line); }
+      .module-group h3 { margin:0 0 22px; font-size:.82rem; }
+      .module-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:26px 40px; }
+      .module h4 { margin:0 0 6px; font-size:.86rem; }
+      .module p { margin:0; color:var(--muted); font-size:.76rem; }
+      .premium-section { padding:104px 0 0; }
+      .premium-grid { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+      .premium-block { padding:28px 32px 34px 0; }
+      .premium-block + .premium-block { padding:28px 0 34px 32px; border-left:1px solid var(--line); }
+      .premium-block h3 { margin:0 0 18px; font-size:1rem; }
+      .premium-block ul { display:grid; gap:11px; margin:0; padding:0; list-style:none; color:var(--muted); font-size:.82rem; }
+      .premium-block li::before { content:"-"; display:inline-block; width:25px; color:var(--accent); }
+      .cta { padding:112px 0 92px; text-align:center; border-bottom:1px solid var(--line); }
+      .cta .brand { justify-content:center; color:var(--muted); }
+      .cta h2 { margin:14px 0 26px; font-size:clamp(2.8rem,6vw,5.2rem); letter-spacing:-.08em; line-height:.9; }
+      .cta p { margin:20px 0 0; color:var(--muted); font-size:.82rem; }
+      .reveal { opacity:0; transform:translateY(28px); transition:opacity .7s ease,transform .7s ease; }
+      .reveal.is-visible { opacity:1; transform:none; }
+      @media (prefers-reduced-motion:reduce) { .reveal { opacity:1; transform:none; transition:none; } }
+      @media (max-width:760px) { .radar-hero { padding:72px 0 58px; } .radar-hero-inner { grid-template-columns:1fr; gap:45px; } .radar-hero h1 { font-size:clamp(3.7rem,18vw,6rem); } .hero-art { min-height:280px; } .section-heading { align-items:flex-start; flex-direction:column; } .case-body { grid-template-columns:1fr; } .case-meta { border-right:0; border-bottom:1px solid var(--line); } .case-row { grid-template-columns:58px 8px 78px 1fr; } .module-grid { grid-template-columns:1fr; gap:18px; } .premium-grid { grid-template-columns:1fr; } .premium-block,.premium-block + .premium-block { padding:25px 0; } .premium-block + .premium-block { border-top:1px solid var(--line); border-left:0; } }
     </style>
   </head>
   <body>
     <header>
       <div class="container nav">
         <a href="#top" class="brand" aria-label="Core home"><img src="core.png" alt="" /><span>Core</span><span class="brand-rule" aria-hidden="true"></span></a>
-        <nav class="nav-links" aria-label="Main navigation"><a href="#features">Capabilities</a><a href="#activity">Activity</a><a href="#docs">Documentation</a></nav>
+        <nav class="nav-links" aria-label="Main navigation"><a href="#cases">Workflows</a><a href="#features">Coding</a><a href="#premium">Premium</a></nav>
         <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch theme"><span aria-hidden="true">☼</span></button>
         <a href="#" class="primary-btn js-login-link">Open Core</a>
         <a href="#" class="profile-link" aria-label="Open your Core profile"><img class="profile-avatar" alt="" /><span class="profile-name"></span></a>
@@ -95,11 +166,18 @@
     </header>
 
     <main id="top">
-      <section class="hero"><div class="container hero-inner"><div><div class="eyebrow">Discord code, made deployable</div><h1>Write it.<br />Run it.</h1><p class="hero-copy">Core is a Discord platform that lets you write code directly into your bot, then automatically generates and deploys tools, commands, and systems for your selected server.</p><div class="hero-actions"><a href="#" class="primary-btn js-login-link">Open Core <span aria-hidden="true">↗</span></a><a href="#features" class="login-btn">See what it can do</a></div><div class="trust-line"><span>Free to use</span><span>Up to 2 servers</span><span>Releases 9/26/2026</span></div></div><div class="preview" aria-label="Core code deployment preview"><div class="mock"><div class="mock-top"><span>core / deploy</span><span class="mock-status">systems ready</span></div><div class="mock-body"><div class="workspace-label"><img src="core.png" alt="" /> selected server / moderation</div><div class="prompt"><span class="prompt-label">Write directly into your bot</span><div class="code">Create a moderation command that checks a user and deploys a clean embed response.</div><div class="chip-row"><span class="chip">Generate</span><span class="chip">Deploy</span><span class="chip">Discord</span></div></div></div></div></div></div></section>
-      <section id="features" class="section"><div class="container"><p class="section-kicker">What Core does</p><h2 class="section-title">From code on the page to systems in your server.</h2><div class="card-grid"><article class="card"><div class="icon">01 /</div><h3>Write in the bot</h3><p>Describe or write the code your server needs directly inside Core.</p></article><article class="card"><div class="icon">02 /</div><h3>Generate the tool</h3><p>Core turns your code into commands, utilities, and complete server systems.</p></article><article class="card"><div class="icon">03 /</div><h3>Deploy with control</h3><p>Choose a server, review the change, and keep your bot’s code in your hands.</p></article></div><div class="feed" id="activity"><div class="feed-label">Recent activity</div><div class="feed-list"><div class="feed-row"><span class="feed-time">09:41:12</span><span><strong>moderation.review</strong> <em>generated a clean embed response</em></span><span class="feed-state">Ready</span></div><div class="feed-row"><span class="feed-time">09:38:04</span><span><strong>server.context</strong> <em>selected a deployment server</em></span><span class="feed-state">Synced</span></div><div class="feed-row"><span class="feed-time">09:31:46</span><span><strong>bot.deploy</strong> <em>published a new command to Discord</em></span><span class="feed-state">Live</span></div></div></div></div></section>
-      <section class="section"><div class="container"><div class="stories"><article class="story"><div class="story-tag">Core / 01</div><div><h3>Write the command your moderators need.</h3><p>Put code directly into your bot and keep the prompt, server context, and generated response together.</p></div><div class="story-result"><strong>Result</strong>Code ready to review.</div></article><article class="story"><div class="story-tag">Core / 02</div><div><h3>Generate tools for the moments that matter.</h3><p>Create moderation, onboarding, role, and utility systems without leaving the place where you wrote them.</p></div><div class="story-result"><strong>Result</strong>A more capable bot.</div></article><article class="story"><div class="story-tag">Core / 03</div><div><h3>Deploy to the server you selected.</h3><p>Core is free to use, with an optional Premium tier available for $5 USD or 500 Robux.</p></div><div class="story-result"><strong>Release</strong>9/26/2026.</div></article></div><div class="bar"><div><h3>Your bot starts here.</h3><p>Sign in to select a server and start writing code directly into Core.</p><p class="auth-note" role="status">Discord login is unavailable right now. Please try again.</p></div><a href="#" class="primary-btn js-login-link">Login <span aria-hidden="true">↗</span></a></div></div></section>
+      <section class="radar-hero"><div class="container radar-hero-inner"><div><div class="eyebrow">Core / Discord development</div><h1>Build for<br />your server.</h1><p class="hero-copy">Core lets you write code directly through your Discord bot, which automatically generates custom tools, features, and content tailored to the server you select.</p><div class="hero-actions"><a href="#" class="primary-btn js-login-link">Open Core <span aria-hidden="true">↗</span></a><a href="#cases" class="login-btn">See what you can build</a></div><div class="trust-line"><span>Free to use</span><span>Server-specific</span><span>Live deployments</span></div></div><div class="hero-art reveal" aria-label="Core code generation preview"><div class="art-top"><span>core / live workspace</span><span class="art-status">generation ready</span></div><div class="art-grid"><div class="art-tile"><span class="art-label">Selected server</span><strong class="art-value">Ocean One</strong></div><div class="art-tile"><span class="art-label">Generated tools</span><strong class="art-value">08 ready</strong></div><div class="art-tile wide"><span class="art-label">Recent build</span><div class="art-log"><span>09:41:12</span><i></i><strong>moderation.review</strong><span>custom command generated</span></div><div class="art-log"><span>09:38:04</span><i></i><strong>welcome.cards</strong><span>server content deployed</span></div></div></div></div></div></section>
+      <section class="container signal reveal"><div><strong>01</strong><span>Write through the bot</span></div><div><strong>∞</strong><span>Ideas you can build</span></div><div><strong>Free</strong><span>To build and deploy</span></div></section>
+      <section id="cases" class="case-section"><div class="container"><div class="section-heading reveal"><div><p class="section-kicker">Core workflows</p><h2>From an idea in chat to a feature in your server.</h2></div><p>Write what your Discord server needs, let Core shape it into a workflow for your selected server, then review and deploy the result.</p></div>
+        <article class="case reveal"><div class="case-head"><strong>Write it <span>Describe the feature</span></strong><span class="feed-state">Ready to build</span></div><div class="case-body"><div class="case-meta"><small>Step one</small><strong>Code through the bot</strong><p>Give Core the command, workflow, or server tool you want to create in the place your community already uses.</p></div><div class="case-log"><div class="case-row"><span>09:41:01</span><i></i><strong>core.prompt</strong><span>Selected Ocean One</span></div><div class="case-row"><span>09:41:05</span><i></i><strong>builder.input</strong><span>Write a moderation review command</span></div><div class="case-row ok"><span>09:41:08</span><i></i><strong>Core</strong><span>Server context loaded</span></div><div class="case-row ok"><span>09:41:10</span><i></i><strong>Core</strong><span>Feature plan generated</span></div></div></div></article>
+        <article class="case reveal"><div class="case-head"><strong>Generate it <span>Tailored to your server</span></strong><span class="feed-state">Build complete</span></div><div class="case-body"><div class="case-meta"><small>Step two</small><strong>Make the tool yours</strong><p>Core turns your idea into custom tools, features, and content that fit the channels, roles, and style of that server.</p></div><div class="case-log"><div class="case-row"><span>09:41:12</span><i></i><strong>core.generate</strong><span>Building moderation.review</span></div><div class="case-row"><span>09:41:14</span><i></i><strong>core.generate</strong><span>Adding permission checks</span></div><div class="case-row ok"><span>09:41:16</span><i></i><strong>Core</strong><span>Custom embed response ready</span></div><div class="case-row ok"><span>09:41:18</span><i></i><strong>Core</strong><span>Tool ready to review</span></div></div></div></article>
+        <article class="case reveal"><div class="case-head"><strong>Deploy it <span>Put it in the server</span></strong><span class="feed-state">Live in 0.4s</span></div><div class="case-body"><div class="case-meta"><small>Step three</small><strong>Ship with control</strong><p>Review the generated result, deploy it to your selected server, and keep your bot growing with every release.</p></div><div class="case-log"><div class="case-row"><span>09:41:22</span><i></i><strong>core.review</strong><span>Changes approved</span></div><div class="case-row ok"><span>09:41:24</span><i></i><strong>Core</strong><span>Command registered in Discord</span></div><div class="case-row ok"><span>09:41:25</span><i></i><strong>Core</strong><span>Feature deployed to Ocean One</span></div><div class="case-row ok"><span>09:41:26</span><i></i><strong>Core</strong><span>Release 001 opened</span></div></div></div></article>
+      </div></section>
+      <section id="features" class="modules"><div class="container"><div class="section-heading reveal"><div><p class="section-kicker">The coding flow</p><h2>Write what your server needs.</h2></div><a class="login-btn" href="#">Documentation</a></div><div class="module-group reveal"><h3>Build in context</h3><div class="module-grid"><div class="module"><h4>Write directly</h4><p>Describe or write the code through your Discord bot.</p></div><div class="module"><h4>Select a server</h4><p>Give Core the server context your code should fit.</p></div><div class="module"><h4>Shape the result</h4><p>Turn an idea into your own tool, feature, or content.</p></div><div class="module"><h4>Keep your control</h4><p>Review what Core generates before it changes anything.</p></div><div class="module"><h4>Build anything</h4><p>Create the functionality your specific community needs.</p></div><div class="module"><h4>Keep iterating</h4><p>Write another change when your server evolves.</p></div></div></div><div class="module-group reveal"><h3>Ship your code</h3><div class="module-grid"><div class="module"><h4>Generate</h4><p>Let Core turn your writing into working code.</p></div><div class="module"><h4>Review</h4><p>See the feature before you put it in the server.</p></div><div class="module"><h4>Deploy</h4><p>Publish the result to the Discord server you selected.</p></div><div class="module"><h4>Grow</h4><p>Build on your last idea without starting over.</p></div></div></div></div></section>
+      <section id="premium" class="premium-section"><div class="container"><div class="section-heading reveal"><div><p class="section-kicker">Free and premium</p><h2>Start free. Add more room when you need it.</h2></div><p>Core is completely free to use. Premium is optional and available for 500 Robux or $5 USD.</p></div><div class="premium-grid reveal"><div class="premium-block"><h3>Free, today</h3><ul><li>Write code directly through the Core bot</li><li>Generate your own tools, features, and content</li><li>Tailor your code to the server you select</li><li>Review and deploy your builds to Discord</li></ul></div><div class="premium-block"><h3>Premium · 500 Robux or $5 USD</h3><ul><li>More room for larger code projects</li><li>Longer memory for ongoing builds</li><li>Finer control over generated code</li><li>Priority support when you need a hand</li></ul></div></div></div></section>
+      <section class="cta reveal"><div class="container"><a href="#top" class="brand"><img src="core.png" alt="" /><span>Core</span></a><h2>Add Core to your server.</h2><a href="#" class="primary-btn js-login-link">Open Core <span aria-hidden="true">↗</span></a><p>Not sure yet? <a href="#features"><u>Explore the workflows.</u></a></p></div></section>
     </main>
-    <footer><div class="container footer-inner"><a href="#top" class="brand"><img src="core.png" alt="" /><span>Core</span></a><nav class="footer-links" aria-label="Footer navigation"><a href="#features">Capabilities</a><a href="#activity">Activity</a><a href="#" class="js-login-link">Login</a></nav></div></footer>
+    <footer><div class="container footer-inner"><a href="#top" class="brand"><img src="core.png" alt="" /><span>Core</span></a><nav class="footer-links" aria-label="Footer navigation"><a href="#cases">Workflows</a><a href="#features">Coding</a><a href="#" class="js-login-link">Login</a></nav></div></footer>
     <script>
       const themeToggle = document.querySelector(".theme-toggle");
       const savedTheme = localStorage.getItem("core_theme");
@@ -196,6 +274,20 @@
       if (savedProfile?.expiresAt > Date.now() && savedProfile.email) displayDiscordProfile(savedProfile);
       else clearDiscordProfile();
       finishDiscordLogin().catch((error) => console.error("[auth] Discord login failed:", error));
+
+      const revealItems = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -40px" });
+        revealItems.forEach((item) => revealObserver.observe(item));
+      } else {
+        revealItems.forEach((item) => item.classList.add("is-visible"));
+      }
     </script>
   </body>
 </html>

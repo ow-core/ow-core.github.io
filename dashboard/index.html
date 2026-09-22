@@ -56,7 +56,9 @@
       .nav-shell { width:min(1180px,calc(100% - 48px)); margin:10px auto 0; border:1px solid var(--line); border-radius:18px; }
       header { border-bottom:0; background:transparent; }
       .nav-shell .nav { padding:0 16px; }
-      .brand { font-size:.92rem; letter-spacing:-.03em; text-transform:none; }
+      .brand { gap:8px; font-size:.92rem; letter-spacing:-.04em; text-transform:none; }
+      .brand img { width:22px; height:22px; filter:none; }
+      .brand-rule { display:none; }
       .brand-rule { margin-left:4px; }
       .nav-links { text-transform:none; font-size:.76rem; }
       .nav-links a { padding:9px 0; }
@@ -103,6 +105,14 @@
       .login { min-height:calc(100vh - 72px); }
       @media (max-width:900px) { .dashboard-shell { grid-template-columns:1fr; } .sidebar { grid-template-columns:repeat(2,1fr); } }
       @media (max-width:760px) { .nav-shell { width:min(100% - 30px,560px); } .hosting-hero { align-items:flex-start; flex-direction:column; padding:26px; } .hero-actions { justify-content:flex-start; } .stats { grid-template-columns:repeat(2,1fr); } .servers-panel { padding:18px; } .sidebar { grid-template-columns:1fr; } .panel-heading { flex-direction:column; } .server-card { grid-template-columns:42px 1fr auto; } .server-card::after { grid-column:2 / 4; } }
+      .nav-shell { margin-top:12px; border-radius:20px; box-shadow:0 16px 35px rgba(0,0,0,.28); }
+      .nav-shell .nav { min-height:56px; gap:20px; }
+      .brand { gap:9px; }
+      .brand-rule { width:24px; }
+      .nav-links { gap:22px; margin-left:10px; }
+      .button,.hero-button,.new-button,.side-button,.logout { border-radius:9px; }
+      .stat,.panel,.server-card,.side-callout { border-radius:16px; }
+      @media (max-width:760px) { .nav-shell { margin-top:8px; } .nav-shell .nav { gap:12px; } .nav-links { gap:12px; } }
     </style>
   </head>
   <body>
@@ -121,8 +131,8 @@
       <section class="dashboard" id="servers" hidden>
         <div class="container">
           <div class="hosting-hero"><div><p class="eyebrow">Core Discord platform</p><h1>Build your bot.</h1><p class="intro">Welcome back, <strong class="username"></strong>. Choose a server, write the system you need, and keep every deployment under your control.</p></div><div class="hero-actions"><button class="hero-button primary" type="button">+ New system</button><a class="hero-button" href="#servers-list">Documentation</a></div></div>
-          <div class="stats"><div class="stat"><span class="stat-label">Credits</span><strong class="stat-value">∞ Unlimited</strong><span class="stat-note">No daily credit worry</span></div><div class="stat"><span class="stat-label">Active systems</span><strong class="stat-value">0</strong><span class="stat-note">Ready to deploy</span></div><div class="stat"><span class="stat-label">Server slots</span><strong class="stat-value">0/2</strong><span class="stat-note">Free plan included</span></div><div class="stat"><span class="stat-label">Status</span><strong class="stat-value" style="color:var(--green)">Online</strong><span class="stat-note">All systems operational</span></div></div>
-          <div class="dashboard-shell" id="servers-list"><section class="panel servers-panel"><div class="panel-heading"><div><p class="panel-label">Your servers</p><h2>Choose where to build</h2><p>Select a server to open its Core workspace.</p></div><button class="new-button" type="button">+ New system</button></div><div class="toolbar"><span class="count">0 of 2 servers selected</span><span class="premium">Premium unlocks more server slots.</span></div><div class="server-grid"></div><p class="empty" hidden>No manageable Discord servers were found for this account.</p><p class="error" hidden></p></section><aside class="sidebar"><section class="panel side-panel"><p class="panel-label">Server slots</p><h2>2 free slots included</h2><p>Connect the servers you manage and deploy Core systems where they matter.</p><div class="side-callout"><span class="stat-label">Current selection</span><strong>Choose a server to begin</strong></div><button class="side-button" type="button" style="margin-top:18px">Manage slots</button></section><section class="panel side-panel"><p class="panel-label">Core status</p><h2>Everything is ready.</h2><p>Your bot workspace, commands, and systems are available from one dashboard.</p><div class="progress"><span></span></div><div class="side-meta"><span>0 systems deployed</span><span>Live</span></div><button class="side-button primary" type="button" style="margin-top:18px">View documentation</button></section></aside></div>
+          <div class="stats"><div class="stat"><span class="stat-label">Builds</span><strong class="stat-value">∞ Ideas</strong><span class="stat-note">No daily credit worry</span></div><div class="stat"><span class="stat-label">Active projects</span><strong class="stat-value">0</strong><span class="stat-note">Ready to generate</span></div><div class="stat"><span class="stat-label">Server slots</span><strong class="stat-value">0/2</strong><span class="stat-note">Free plan included</span></div><div class="stat"><span class="stat-label">Status</span><strong class="stat-value" style="color:var(--green)">Online</strong><span class="stat-note">All systems operational</span></div></div>
+          <div class="dashboard-shell" id="servers-list"><section class="panel servers-panel"><div class="panel-heading"><div><p class="panel-label">Your servers</p><h2>Choose where to code</h2><p>Select a server to open its Core workspace.</p></div><button class="new-button" type="button">+ New project</button></div><div class="toolbar"><span class="count">0 of 2 servers selected</span><span class="premium">Premium unlocks more server slots.</span></div><div class="server-grid"></div><p class="empty" hidden>No manageable Discord servers were found for this account.</p><p class="error" hidden></p></section><aside class="sidebar"><section class="panel side-panel"><p class="panel-label">Server slots</p><h2>2 free slots included</h2><p>Connect the servers you manage and build custom code for each one.</p><div class="side-callout"><span class="stat-label">Current selection</span><strong>Choose a server to begin</strong></div><button class="side-button" type="button" style="margin-top:18px">Manage slots</button></section><section class="panel side-panel"><p class="panel-label">Core status</p><h2>Everything is ready.</h2><p>Your code workspace, generated features, and deployments are available from one dashboard.</p><div class="progress"><span></span></div><div class="side-meta"><span>0 projects created</span><span>Live</span></div><button class="side-button primary" type="button" style="margin-top:18px">View documentation</button></section></aside></div>
         </div>
       </section>
       <section class="login" aria-labelledby="login-title">
