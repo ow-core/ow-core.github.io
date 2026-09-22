@@ -113,6 +113,81 @@
       .button,.hero-button,.new-button,.side-button,.logout { border-radius:9px; }
       .stat,.panel,.server-card,.side-callout { border-radius:16px; }
       @media (max-width:760px) { .nav-shell { margin-top:8px; } .nav-shell .nav { gap:12px; } .nav-links { gap:12px; } }
+      .dashboard { padding-top:52px; }
+      .hosting-hero { min-height:210px; }
+      .workflow-bar { display:flex; align-items:center; justify-content:space-between; gap:18px; margin:18px 0; padding:15px 18px; border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,.025); }
+      .workflow-step { display:flex; align-items:center; gap:10px; color:var(--muted); font-size:.74rem; font-weight:700; }
+      .workflow-step strong { display:flex; align-items:center; justify-content:center; width:25px; height:25px; border-radius:50%; color:#17130c; background:var(--accent); font-size:.68rem; }
+      .workflow-step.is-current { color:var(--ink); }
+      .workflow-arrow { color:var(--muted); }
+      .project-note { max-width:520px; margin:0 0 20px; color:var(--muted); font-size:.82rem; }
+      .server-card { grid-template-columns:48px 1fr auto; min-height:168px; }
+      .server-card.is-disabled { opacity:.58; cursor:not-allowed; }
+      .server-card.is-disabled:hover { border-color:var(--line); box-shadow:none; }
+      .server-badges { display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
+      .server-badge { padding:4px 7px; border:1px solid var(--line); border-radius:99px; color:var(--muted); font-size:.58rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+      .server-badge.ready { color:var(--green); border-color:rgba(62,207,142,.35); }
+      .server-card::after { content:"Select server ↗"; }
+      .server-card.is-selected::after { content:"Selected · continue below"; }
+      .server-card.is-disabled::after { content:"Invite Core to use this"; color:var(--muted); }
+      .create-server { display:inline-flex; align-items:center; gap:8px; margin-top:18px; color:var(--accent); font-size:.75rem; font-weight:800; text-decoration:underline; text-underline-offset:4px; }
+      .continue-bar { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-top:18px; padding:18px 0 0; border-top:1px solid var(--line); }
+      .continue-message { color:var(--muted); font-size:.75rem; }
+      .continue-button { min-height:44px; padding:0 17px; border:1px solid var(--accent); border-radius:10px; color:#17130c; background:var(--accent); font-size:.73rem; font-weight:800; cursor:pointer; }
+      .continue-button:disabled { cursor:not-allowed; opacity:.4; }
+      .workspace-view { margin-top:18px; padding:28px; border:1px solid var(--line); border-radius:18px; background:linear-gradient(145deg,var(--paper-deep),var(--paper)); }
+      .workspace-view[hidden] { display:none; }
+      .workspace-top { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:24px; }
+      .workspace-top h2 { margin:7px 0 0; font-size:1.6rem; letter-spacing:-.05em; }
+      .workspace-top p { margin:6px 0 0; color:var(--muted); font-size:.78rem; }
+      .back-button { border:0; color:var(--muted); background:transparent; cursor:pointer; font-size:.73rem; font-weight:800; }
+      .code-prompt { width:100%; min-height:130px; padding:16px; resize:vertical; border:1px solid var(--line); border-radius:12px; outline:0; color:var(--ink); background:var(--paper); font:inherit; font-size:.84rem; }
+      .code-prompt:focus { border-color:var(--accent); }
+      .workspace-actions { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:14px; }
+      .workspace-status { color:var(--muted); font-size:.72rem; }
+      @media (max-width:760px) { .workflow-bar { align-items:flex-start; flex-direction:column; } .workflow-arrow { display:none; } .continue-bar,.workspace-top,.workspace-actions { align-items:flex-start; flex-direction:column; } .continue-button { width:100%; } .workspace-view { padding:20px; } }
+
+      /* Final dashboard pass: keep the page calm and make the next action obvious. */
+      :root { --paper:#0d1110; --paper-deep:#151b18; --ink:#f2f0e9; --muted:#9da7a0; --line:rgba(242,240,233,.14); --accent:#f0b86b; --green:#73d3a2; }
+      [data-theme="light"] { --paper:#f5f1e8; --paper-deep:#fffdf8; --ink:#18201d; --muted:#68736c; --line:rgba(24,32,29,.15); --accent:#c7653c; --green:#3f8d65; }
+      body { font-family:Georgia,"Times New Roman",serif; background:var(--paper); }
+      body::before { opacity:.08; background-size:48px 48px; }
+      .notice { color:var(--ink); background:var(--accent); border:0; font-family:Arial,sans-serif; font-size:.68rem; letter-spacing:.04em; }
+      .nav-shell { background:color-mix(in srgb,var(--paper-deep) 92%,transparent); box-shadow:0 12px 30px rgba(0,0,0,.16); }
+      .brand,.nav-links,.account,.logout,.theme-toggle { font-family:Arial,sans-serif; }
+      .brand { font-weight:800; }
+      .dashboard { padding-top:38px; }
+      .hosting-hero { min-height:250px; padding:42px; border-radius:12px; border-color:var(--line); background:linear-gradient(120deg,var(--paper-deep),color-mix(in srgb,var(--accent) 11%,var(--paper))); }
+      .hosting-hero h1 { max-width:620px; font-size:clamp(3.2rem,7vw,6.4rem); line-height:.88; }
+      .hosting-hero .intro { line-height:1.65; }
+      .eyebrow,.section-label,.panel-label,.stat-label,.count,.premium,.server-status,.server-badge { font-family:Arial,sans-serif; }
+      .stats { gap:10px; }
+      .stat,.panel { border-radius:12px; background:var(--paper-deep); box-shadow:0 8px 24px rgba(0,0,0,.08); }
+      .stat { min-height:104px; padding:18px; }
+      .stat-value { font-size:1.65rem; }
+      .workflow-bar { margin:18px 0; border-radius:10px; background:color-mix(in srgb,var(--accent) 8%,var(--paper-deep)); font-family:Arial,sans-serif; }
+      .servers-panel { padding:28px; }
+      .panel-heading h2,.side-panel h2,.workspace-top h2 { font-weight:700; }
+      .new-button,.continue-button,.hero-button.primary,.side-button.primary { font-family:Arial,sans-serif; }
+      .server-grid { grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; }
+      .server-card { min-height:164px; border-radius:10px; background:var(--paper); transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease; }
+      .server-card:hover { transform:translateY(-2px); }
+      .server-card::after { font-family:Arial,sans-serif; }
+      .server-icon { background:var(--accent); }
+      .server-meta,.server-name { font-family:Arial,sans-serif; }
+      .server-name { font-size:.88rem; }
+      .side-panel { padding:24px; }
+      .side-callout { border-radius:10px; background:color-mix(in srgb,var(--accent) 7%,var(--paper)); }
+      .workspace-view { border-radius:12px; background:var(--paper-deep); }
+      .button,.hero-button,.new-button,.side-button,.continue-button { border-radius:8px; }
+      @media (max-width:760px) {
+        .dashboard { padding-top:24px; }
+        .hosting-hero { min-height:0; padding:28px 22px; }
+        .hosting-hero h1 { font-size:clamp(3rem,15vw,4.8rem); }
+        .stats { gap:8px; }
+        .servers-panel { padding:20px 16px; }
+        .server-grid { grid-template-columns:1fr; }
+      }
     </style>
   </head>
   <body>
@@ -132,7 +207,9 @@
         <div class="container">
           <div class="hosting-hero"><div><p class="eyebrow">Core Discord platform</p><h1>Build your bot.</h1><p class="intro">Welcome back, <strong class="username"></strong>. Choose a server, write the system you need, and keep every deployment under your control.</p></div><div class="hero-actions"><button class="hero-button primary" type="button">+ New system</button><a class="hero-button" href="#servers-list">Documentation</a></div></div>
           <div class="stats"><div class="stat"><span class="stat-label">Builds</span><strong class="stat-value">∞ Ideas</strong><span class="stat-note">No daily credit worry</span></div><div class="stat"><span class="stat-label">Active projects</span><strong class="stat-value">0</strong><span class="stat-note">Ready to generate</span></div><div class="stat"><span class="stat-label">Server slots</span><strong class="stat-value">0/2</strong><span class="stat-note">Free plan included</span></div><div class="stat"><span class="stat-label">Status</span><strong class="stat-value" style="color:var(--green)">Online</strong><span class="stat-note">All systems operational</span></div></div>
-          <div class="dashboard-shell" id="servers-list"><section class="panel servers-panel"><div class="panel-heading"><div><p class="panel-label">Your servers</p><h2>Choose where to code</h2><p>Select a server to open its Core workspace.</p></div><button class="new-button" type="button">+ New project</button></div><div class="toolbar"><span class="count">0 of 2 servers selected</span><span class="premium">Premium unlocks more server slots.</span></div><div class="server-grid"></div><p class="empty" hidden>No manageable Discord servers were found for this account.</p><p class="error" hidden></p></section><aside class="sidebar"><section class="panel side-panel"><p class="panel-label">Server slots</p><h2>2 free slots included</h2><p>Connect the servers you manage and build custom code for each one.</p><div class="side-callout"><span class="stat-label">Current selection</span><strong>Choose a server to begin</strong></div><button class="side-button" type="button" style="margin-top:18px">Manage slots</button></section><section class="panel side-panel"><p class="panel-label">Core status</p><h2>Everything is ready.</h2><p>Your code workspace, generated features, and deployments are available from one dashboard.</p><div class="progress"><span></span></div><div class="side-meta"><span>0 projects created</span><span>Live</span></div><button class="side-button primary" type="button" style="margin-top:18px">View documentation</button></section></aside></div>
+            <div class="workflow-bar"><span class="workflow-step is-current"><strong>1</strong> Create a project</span><span class="workflow-arrow">/</span><span class="workflow-step"><strong>2</strong> Select a server</span><span class="workflow-arrow">/</span><span class="workflow-step"><strong>3</strong> Start coding</span></div>
+            <div class="dashboard-shell" id="servers-list"><section class="panel servers-panel"><div class="panel-heading"><div><p class="panel-label">Step 1 / Create a project</p><h2>Choose where to code</h2><p class="project-note">Core shows servers you own and servers where the bot is already installed. Pick one to continue into your coding workspace.</p></div><button class="new-button new-project-button" type="button">+ New project</button></div><div class="toolbar"><span class="count">0 servers selected</span><span class="premium">Premium unlocks more server slots.</span></div><div class="server-grid"></div><p class="empty" hidden>No owned servers or Core-connected servers were found.</p><p class="error" hidden></p><a class="create-server" href="https://discord.com/channels/@me" target="_blank" rel="noreferrer">+ Create a Discord server <span aria-hidden="true">↗</span></a><div class="continue-bar"><span class="continue-message">Select a server to unlock your workspace.</span><button class="continue-button" type="button" disabled>Continue to coding</button></div></section><aside class="sidebar"><section class="panel side-panel"><p class="panel-label">Eligible servers</p><h2>Owned or connected</h2><p>Use a server you own, or invite Core first so it can work there.</p><div class="side-callout"><span class="stat-label">Server access</span><strong>Owner + Core installed</strong></div><a class="side-button" href="https://discord.com/oauth2/authorize?client_id=1549947934920024064&amp;scope=bot%20applications.commands&amp;permissions=8" target="_blank" rel="noreferrer" style="display:flex;align-items:center;justify-content:center;margin-top:18px">Invite Core</a></section><section class="panel side-panel"><p class="panel-label">Core status</p><h2>Ready to build.</h2><p>After you choose a server, Core opens a focused workspace for your next project.</p><div class="progress"><span></span></div><div class="side-meta"><span>0 projects created</span><span>Live</span></div><button class="side-button primary" type="button" style="margin-top:18px">View documentation</button></section></aside></div>
+            <section class="workspace-view" hidden><div class="workspace-top"><div><p class="panel-label">Step 3 / Start coding</p><h2 class="workspace-title">New project</h2><p class="workspace-server"></p></div><button class="back-button" type="button">← Change server</button></div><label class="panel-label" for="code-prompt">What should Core build?</label><textarea id="code-prompt" class="code-prompt" placeholder="Describe the tool, feature, or content you want to create for this server..."></textarea><div class="workspace-actions"><span class="workspace-status">Your project will be tailored to the selected server.</span><button class="new-button build-button" type="button">Generate project</button></div></section>
         </div>
       </section>
       <section class="login" aria-labelledby="login-title">
@@ -153,6 +230,18 @@
       const emptyState = document.querySelector(".empty");
       const errorState = document.querySelector(".error");
       const count = document.querySelector(".count");
+      const continueButton = document.querySelector(".continue-button");
+      const continueMessage = document.querySelector(".continue-message");
+      const workspace = document.querySelector(".workspace-view");
+      const workspaceTitle = document.querySelector(".workspace-title");
+      const workspaceServer = document.querySelector(".workspace-server");
+      const backButton = document.querySelector(".back-button");
+      const buildButton = document.querySelector(".build-button");
+      const buildStatus = document.querySelector(".workspace-status");
+      const botApiUrl = "https://bovine-amiable-chalice.ngrok-free.dev";
+      let eligibleGuilds = [];
+      let selectedGuild = null;
+      let currentProfile = null;
 
       const savedTheme = localStorage.getItem("core_theme");
       if (savedTheme === "light") document.documentElement.dataset.theme = "light";
@@ -183,37 +272,92 @@
         window.location.assign(authUrl.toString());
       }
 
-      function showLoggedIn(profile) {
+      async function showLoggedIn(profile) {
+        currentProfile = profile;
         document.querySelector(".account-avatar").src = profile.avatar;
         document.querySelector(".account-name").textContent = profile.nickname;
         document.querySelector(".username").textContent = profile.nickname;
         dashboard.hidden = false;
         login.classList.remove("is-visible");
-        renderServers(profile);
+        await loadEligibleGuilds(profile.token);
+        renderServers();
       }
 
-      function renderServers(profile) {
-        const selected = JSON.parse(localStorage.getItem(selectedKey) || "[]");
-        const guilds = [...(profile.guilds || [])].sort((first, second) => Number(second.owner) - Number(first.owner) || first.name.localeCompare(second.name));
+      async function loadEligibleGuilds(accessToken) {
+        try {
+          const response = await fetch(`${botApiUrl}/api/guilds`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
+          if (!response.ok) throw new Error("Core server list is unavailable.");
+          const payload = await response.json();
+          eligibleGuilds = payload.guilds || [];
+        } catch (error) {
+          eligibleGuilds = [];
+          errorState.hidden = false;
+          errorState.textContent = "Core could not check bot presence right now. Try again in a moment.";
+          console.error("[guilds] Core bot list failed:", error);
+        }
+      }
+
+      function renderServers() {
+        const guilds = [...eligibleGuilds]
+          .sort((first, second) => first.name.localeCompare(second.name));
         serverGrid.innerHTML = "";
         emptyState.hidden = guilds.length > 0;
+        emptyState.textContent = "No servers are ready yet. You must own the server and have Core installed in it.";
         guilds.forEach((guild) => {
-          const isSelected = selected.includes(guild.id);
+          const isSelected = selectedGuild?.id === guild.id;
           const card = document.createElement("button");
           card.type = "button";
           card.className = `server-card${isSelected ? " is-selected" : ""}`;
-          card.innerHTML = `<span class="server-icon">${guild.name.slice(0, 1).toUpperCase()}</span><span><span class="server-name"></span><span class="server-meta">${guild.owner ? "Owned by you" : "Manageable server"} · Bot presence will be checked when connected</span></span><span class="server-status">${isSelected ? "Selected" : "Select"}</span>`;
+          card.innerHTML = `<span class="server-icon">${guild.name.slice(0, 1).toUpperCase()}</span><span><span class="server-name"></span><span class="server-meta">Owned by you · Core installed</span><span class="server-badges"><span class="server-badge ready">Owner</span><span class="server-badge ready">Core installed</span></span></span><span class="server-status">${isSelected ? "Selected" : "Select"}</span>`;
           card.querySelector(".server-name").textContent = guild.name;
           card.addEventListener("click", () => {
-            const current = JSON.parse(localStorage.getItem(selectedKey) || "[]");
-            if (current.includes(guild.id)) localStorage.setItem(selectedKey, JSON.stringify(current.filter((id) => id !== guild.id)));
-            else if (current.length < maxFreeServers) localStorage.setItem(selectedKey, JSON.stringify([...current, guild.id]));
+            selectedGuild = guild;
             renderServers(profile);
           });
           serverGrid.append(card);
         });
-        count.textContent = `${JSON.parse(localStorage.getItem(selectedKey) || "[]").length} of ${maxFreeServers} servers selected`;
+        count.textContent = selectedGuild ? "1 server selected" : "0 servers selected";
+        continueButton.disabled = !selectedGuild;
+        continueMessage.textContent = selectedGuild ? `${selectedGuild.name} is ready. Continue when you are ready to code.` : "Select an owned server with Core installed to unlock your workspace.";
       }
+
+      async function openWorkspace() {
+        if (!selectedGuild) return;
+        continueButton.disabled = true;
+        continueMessage.textContent = "Creating your server workspace...";
+        try {
+          const response = await fetch(`${botApiUrl}/api/workspaces`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${currentProfile.token}`,
+            },
+            body: JSON.stringify({ guildId: selectedGuild.id, guildName: selectedGuild.name }),
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || "The workspace could not be created.");
+          buildStatus.textContent = result.premium
+            ? `Premium access active for ${selectedGuild.name}. Workspace created at ${result.path}.`
+            : `Free access active for ${selectedGuild.name}. Workspace created at ${result.path}.`;
+        } catch (error) {
+          continueMessage.textContent = error.message;
+          continueButton.disabled = false;
+          return;
+        }
+        workspace.hidden = false;
+        workspaceTitle.textContent = `Build for ${selectedGuild.name}`;
+        workspaceServer.textContent = "Core is connected and ready to generate server-specific code.";
+        workspace.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      continueButton.addEventListener("click", openWorkspace);
+      backButton.addEventListener("click", () => { workspace.hidden = true; });
+      buildButton.addEventListener("click", () => {
+        const prompt = document.querySelector(".code-prompt").value.trim();
+        buildStatus.textContent = prompt ? "Project brief saved. Core is ready to generate it." : "Describe what you want Core to build first.";
+      });
 
       async function finishLogin() {
         const params = new URLSearchParams(window.location.hash.slice(1));

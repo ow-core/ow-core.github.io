@@ -1,4 +1,6 @@
 const crypto = require('node:crypto');
+const fs = require('node:fs');
+const path = require('node:path');
 const express = require('express');
 const session = require('express-session');
 require('dotenv').config();
@@ -11,9 +13,20 @@ const clientSecret = process.env.CLIENT_SECRET;
 const publicUrl = process.env.PUBLIC_URL || 'https://bovine-amiable-chalice.ngrok-free.dev';
 const redirectUri = process.env.DISCORD_REDIRECT_URI || 'https://ow-core.github.io';
 const frontendUrl = process.env.FRONTEND_URL || 'https://ow-core.github.io';
+let premiumRoleIds = {};
 
-if (!clientId || !clientSecret || !redirectUri || !process.env.SESSION_SECRET) {
-    throw new Error('Add CLIENT_ID, CLIENT_SECRET, DISCORD_REDIRECT_URI, and SESSION_SECRET to bot/.env.');
+try {
+    premiumRoleIds = JSON.parse(process.env.PREMIUM_ROLE_IDS || '{}');
+} catch (error) {
+    throw new Error('PREMIUM_ROLE_IDS must be valid JSON mapping guild IDs to role IDs.');
+}
+
+if (!clientId || !redirectUri || !process.env.SESSION_SECRET) {
+    throw new Error('Add CLIENT_ID, DISCORD_REDIRECT_URI, and SESSION_SECRET to bot/.env.');
+}
+
+if (!clientSecret) {
+    console.warn('[auth] CLIENT_SECRET is missing. The bot will start, but backend OAuth login is disabled.');
 }
 
 app.use(express.json({ limit: '100kb' }));
@@ -22,7 +35,7 @@ app.use((request, response, next) => {
         response.setHeader('Access-Control-Allow-Origin', frontendUrl);
         response.setHeader('Access-Control-Allow-Credentials', 'true');
     }
-    response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     response.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     if (request.method === 'OPTIONS') return response.sendStatus(204);
     next();
@@ -41,6 +54,10 @@ app.use(session({
 }));
 
 app.get('/auth/login', (request, response) => {
+    if (!clientSecret) {
+        return response.status(503).send('Backend OAuth is disabled until CLIENT_SECRET is configured.');
+    }
+
     const state = crypto.randomBytes(24).toString('hex');
     request.session.oauthState = state;
 
@@ -105,6 +122,98 @@ app.get('/auth/discord/callback', async (request, response) => {
 
 app.get('/api/me', (request, response) => {
     response.json({ user: request.session.user || null });
+});
+
+app.get('/api/guilds', async (request, response) => {
+    const authorization = request.headers.authorization || '';
+    const accessToken = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+    if (!accessToken) {
+        return response.status(401).json({ error: 'You must be logged in to view eligible servers.' });
+    }
+
+    try {
+        const guildResponse = await fetch('https://discord.com/api/users/@me/guilds', {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (!guildResponse.ok) {
+            return response.status(401).json({ error: 'Your Discord session has expired.' });
+        }
+
+        const ownedGuilds = await guildResponse.json();
+        const guilds = ownedGuilds
+            .filter((ownedGuild) => ownedGuild.owner && client.guilds.cache.has(ownedGuild.id))
+            .map((ownedGuild) => {
+                const guild = client.guilds.cache.get(ownedGuild.id);
+                return {
+                    id: guild.id,
+                    name: guild.name,
+                    icon: guild.iconURL({ size: 128 }),
+                };
+            });
+
+        response.json({ guilds });
+    } catch (error) {
+        console.error('[guilds] Failed to resolve eligible servers:', error);
+        response.status(502).json({ error: 'Discord server access could not be checked.' });
+    }
+});
+
+app.post('/api/workspaces', async (request, response) => {
+    const { guildId, guildName } = request.body || {};
+
+    if (!/^\d{17,20}$/.test(guildId || '')) {
+        return response.status(400).json({ error: 'A valid Discord guild ID is required.' });
+    }
+
+    const guild = client.guilds.cache.get(guildId);
+    if (!guild) {
+        return response.status(404).json({ error: 'Core is not installed in that server.' });
+    }
+
+    const authorization = request.headers.authorization || '';
+    const accessToken = authorization.startsWith('Bearer ') ? authorization.slice(7) : '';
+    if (!accessToken) {
+        return response.status(401).json({ error: 'You must be logged in to create a workspace.' });
+    }
+
+    const guildResponse = await fetch('https://discord.com/api/users/@me/guilds', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    if (!guildResponse.ok) {
+        return response.status(401).json({ error: 'Your Discord session has expired.' });
+    }
+    const userGuilds = await guildResponse.json();
+    const selectedGuild = userGuilds.find((userGuild) => userGuild.id === guildId);
+    if (!selectedGuild?.owner) {
+        return response.status(403).json({ error: 'You must own the selected server.' });
+    }
+
+    const userResponse = await fetch('https://discord.com/api/users/@me', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    if (!userResponse.ok) {
+        return response.status(401).json({ error: 'Your Discord session has expired.' });
+    }
+    const user = await userResponse.json();
+    const premiumRoleId = premiumRoleIds[guildId];
+    let premium = false;
+
+    if (premiumRoleId) {
+        const member = await guild.members.fetch(user.id).catch(() => null);
+        premium = Boolean(member?.roles.cache.has(premiumRoleId));
+    }
+
+    const workspacePath = path.join(__dirname, 'servers', guildId);
+    fs.mkdirSync(workspacePath, { recursive: true });
+    fs.writeFileSync(path.join(workspacePath, 'workspace.json'), `${JSON.stringify({
+        guildId,
+        guildName: guild.name || guildName || 'Discord server',
+        userId: user.id,
+        premium,
+        createdAt: new Date().toISOString(),
+    }, null, 2)}\n`);
+
+    response.status(201).json({ created: true, guildId, premium, path: `servers/${guildId}` });
 });
 
 app.post('/api/panel', (request, response) => {
