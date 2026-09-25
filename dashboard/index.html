@@ -8,7 +8,7 @@
     <link rel="icon" href="../core.png" type="image/png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
       :root { --ink:#f4f4f4; --paper:#050505; --paper-deep:#171717; --muted:#8b8b8b; --line:rgba(255,255,255,.14); --accent:#e5b567; --green:#3ecf8e; --bad:#f2555a; }
       [data-theme="light"] { --ink:#171817; --paper:#e8e4db; --paper-deep:#d8d3c8; --muted:#686861; --line:rgba(23,24,23,.18); --accent:#e85d35; --green:#638b6b; }
@@ -41,6 +41,8 @@
       .project-card p { margin:0; color:var(--muted); font-size:.74rem; }
       .project-card button { align-self:flex-start; min-height:34px; padding:0 11px; border:1px solid var(--line); border-radius:8px; color:var(--ink); background:transparent; font-size:.68rem; font-weight:800; cursor:pointer; }
       .project-card button:hover { border-color:var(--accent); color:var(--accent); }
+      .project-actions { display:flex; flex-wrap:wrap; gap:7px; }
+      .project-card .open-code-button { border-color:var(--accent); color:var(--accent); }
       .project-empty { padding:42px 0 12px; color:var(--muted); border-top:1px solid var(--line); }
       .heading { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:42px; }
       h1 { max-width:720px; margin:12px 0 0; font-size:clamp(3.2rem,7vw,6.6rem); letter-spacing:-.08em; line-height:.86; }
@@ -161,13 +163,14 @@
       /* Final dashboard pass: keep the page calm and make the next action obvious. */
       :root { --paper:#050505; --paper-deep:#171717; --ink:#f4f4f4; --muted:#8b8b8b; --line:rgba(255,255,255,.14); --accent:#e5b567; --green:#3ecf8e; }
       [data-theme="light"] { --paper:#e8e4db; --paper-deep:#d8d3c8; --ink:#171817; --muted:#686861; --line:rgba(23,24,23,.18); --accent:#e85d35; --green:#638b6b; }
-      body { font-family:"DM Sans",Arial,Helvetica,sans-serif; background:var(--paper); }
+      body { font-family:"Manrope",Arial,Helvetica,sans-serif; font-size:15px; background:var(--paper); }
       body::before { opacity:.12; background-size:64px 64px; }
       .notice { display:none; }
       header { position:sticky; top:0; z-index:10; }
       .nav-shell { background:color-mix(in srgb,var(--paper-deep) 92%,transparent); box-shadow:0 16px 35px rgba(0,0,0,.28); }
-      .brand,.nav-links,.account,.logout,.theme-toggle { font-family:"DM Sans",Arial,Helvetica,sans-serif; }
-      h1,h2,h3,.stat-value,.button,.hero-button,.new-button,.continue-button { font-family:"Space Grotesk","DM Sans",Arial,sans-serif; }
+      .brand,.nav-links,.account,.logout,.theme-toggle { font-family:"Manrope",Arial,Helvetica,sans-serif; }
+      h1,h2,h3,.stat-value,.button,.hero-button,.new-button,.continue-button { font-family:"Manrope",Arial,Helvetica,sans-serif; }
+      h1,h2,h3 { letter-spacing:-.04em; }
       .brand { font-weight:800; }
       .dashboard { padding-top:38px; }
       .hosting-hero { min-height:250px; padding:42px; border-radius:16px; border-color:var(--line); background:linear-gradient(145deg,var(--paper-deep),var(--paper)); box-shadow:0 20px 50px rgba(0,0,0,.22); }
@@ -206,6 +209,9 @@
       .dashboard-shell[hidden] { display:none; }
       .workflow-bar { display:none; }
       .workflow-bar.is-visible { display:flex; }
+      body * { font-family:"Manrope",Arial,Helvetica,sans-serif; }
+      h1,h2,h3,.hosting-hero h1,.panel-heading h2,.side-panel h2,.workspace-top h2,.project-card h3 { letter-spacing:-.035em; }
+      .feed-time,.code,.art-top,.art-label,.art-log,.case-head span,.case-meta small,.case-row { font-family:"JetBrains Mono",monospace; }
     </style>
   </head>
   <body>
@@ -317,6 +323,13 @@
         localStorage.setItem(projectStorageKey(), JSON.stringify(projects));
       }
 
+      function createProjectDraft() {
+        const project = { id:crypto.randomUUID(), name:"Untitled project", server:"", prompt:"", createdAt:Date.now() };
+        projects.unshift(project);
+        saveProjects();
+        window.location.href = `coding.html?project=${encodeURIComponent(project.id)}`;
+      }
+
       function renderProjects() {
         projectGrid.innerHTML = "";
         projectCount.textContent = projects.length;
@@ -324,10 +337,11 @@
         projects.forEach((project) => {
           const card = document.createElement("article");
           card.className = "project-card";
-          card.innerHTML = `<div><span class="panel-label">Project</span><h3></h3><p></p></div><button type="button">Link to a server ↗</button>`;
+          card.innerHTML = `<div><span class="panel-label">Project</span><h3></h3><p></p></div><div class="project-actions"><button class="open-code-button" type="button">Open code</button><button class="link-server-button" type="button">Link to a server</button></div>`;
           card.querySelector("h3").textContent = project.name;
           card.querySelector("p").textContent = project.server ? `Last linked to ${project.server}` : "Not linked to a server yet";
-          card.querySelector("button").addEventListener("click", () => openServerPicker(project));
+          card.querySelector(".open-code-button").addEventListener("click", () => { window.location.href = `coding.html?project=${encodeURIComponent(project.id)}`; });
+          card.querySelector(".link-server-button").addEventListener("click", () => openServerPicker(project));
           projectGrid.append(card);
         });
       }
@@ -441,22 +455,26 @@
           buildStatus.textContent = "Describe what you want Core to build first.";
           return;
         }
+        let savedProject;
         if (pendingProject) {
           pendingProject.server = selectedGuild?.name || pendingProject.server;
           pendingProject.prompt = prompt;
           pendingProject.updatedAt = Date.now();
           projects = projects.filter((project) => project.id !== pendingProject.id);
           projects.unshift(pendingProject);
+          savedProject = pendingProject;
         } else {
-          projects.unshift({ id: crypto.randomUUID(), name: prompt.split(/[.!?\n]/)[0].slice(0, 48) || "New project", server: selectedGuild?.name || "", prompt, createdAt: Date.now() });
+          savedProject = { id: crypto.randomUUID(), name: prompt.split(/[.!?\n]/)[0].slice(0, 48) || "New project", server: selectedGuild?.name || "", prompt, createdAt: Date.now() };
+          projects.unshift(savedProject);
         }
         saveProjects();
         renderProjects();
-        buildStatus.textContent = "Project brief saved. Core is ready to generate it.";
+        buildStatus.textContent = "Project saved. Opening the code workspace...";
+        window.location.href = `coding.html?project=${encodeURIComponent(savedProject.id)}`;
       });
 
-      newProjectButtons.forEach((button) => button.addEventListener("click", () => openServerPicker()));
-      document.querySelector(".hero-button.primary").addEventListener("click", () => openServerPicker());
+      newProjectButtons.forEach((button) => button.addEventListener("click", createProjectDraft));
+      document.querySelector(".hero-button.primary").addEventListener("click", createProjectDraft);
 
       async function finishLogin() {
         const params = new URLSearchParams(window.location.hash.slice(1));

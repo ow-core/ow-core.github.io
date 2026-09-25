@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0c1110" />
+    <title>Core / Code</title>
+    <link rel="icon" href="../core.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css" />
+    <style>
+      :root { color-scheme:dark; --bg:#0b100f; --panel:#111816; --panel-raised:#17201d; --ink:#edf2ed; --muted:#92a099; --line:rgba(237,242,237,.12); --accent:#f0b86b; --green:#73d3a2; --mono:"JetBrains Mono",monospace; --sans:"Manrope",Arial,sans-serif; }
+      [data-theme="light"] { color-scheme:light; --bg:#f4f5f1; --panel:#fff; --panel-raised:#edf0eb; --ink:#17221c; --muted:#65736a; --line:rgba(23,34,28,.14); --accent:#b65c35; --green:#34855e; }
+      * { box-sizing:border-box; }
+      body { min-width:320px; min-height:100vh; margin:0; color:var(--ink); background:var(--bg); font:14px/1.55 var(--sans); }
+      button,a { color:inherit; font:inherit; }
+      a { text-decoration:none; }
+      button { cursor:pointer; }
+      .topbar { height:64px; display:flex; align-items:center; gap:20px; padding:0 24px; border-bottom:1px solid var(--line); background:var(--panel); }
+      .brand { display:flex; align-items:center; gap:9px; font-weight:800; }
+      .brand img { width:24px; height:24px; object-fit:contain; }
+      .top-separator { width:1px; height:22px; background:var(--line); }
+      .crumb { color:var(--muted); font-size:.8rem; }
+      .crumb strong { color:var(--ink); font-weight:600; }
+      .top-actions { display:flex; align-items:center; gap:9px; margin-left:auto; }
+      .icon-button,.save-button { min-height:36px; padding:0 12px; border:1px solid var(--line); border-radius:7px; background:transparent; font-size:.75rem; font-weight:700; }
+      .icon-button { width:36px; padding:0; font-size:1rem; }
+      .save-button { border-color:var(--accent); color:#17130c; background:var(--accent); }
+      .page { width:min(1440px,100%); margin:0 auto; padding:34px 28px 48px; }
+      .project-head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:24px; }
+      .eyebrow { margin:0 0 6px; color:var(--accent); font-size:.66rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      h1 { margin:0; font-size:1.8rem; font-weight:700; letter-spacing:-.04em; line-height:1.2; }
+      .project-title[contenteditable="true"] { min-width:120px; border-radius:4px; outline:0; }
+      .project-title[contenteditable="true"]:focus { box-shadow:0 2px 0 var(--accent); }
+      .project-description { max-width:620px; margin:7px 0 0; color:var(--muted); font-size:.82rem; }
+      .save-state { display:flex; align-items:center; gap:7px; color:var(--muted); font-size:.72rem; white-space:nowrap; }
+      .save-state::before { width:7px; height:7px; border-radius:50%; background:var(--green); content:""; }
+      .workspace { display:grid; grid-template-columns:220px minmax(0,1fr); min-height:620px; overflow:hidden; border:1px solid var(--line); border-radius:12px; background:var(--panel); }
+      .file-rail { padding:18px 12px; border-right:1px solid var(--line); background:var(--panel); }
+      .rail-title { padding:0 10px 13px; color:var(--muted); font-size:.64rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .file-button { width:100%; display:flex; align-items:center; gap:10px; padding:10px; border:0; border-radius:6px; color:var(--muted); background:transparent; text-align:left; font-size:.76rem; }
+      .file-button:hover,.file-button.is-active { color:var(--ink); background:var(--panel-raised); }
+      .file-icon { width:20px; height:20px; display:grid; place-items:center; border-radius:4px; color:#a6c8ff; background:rgba(89,142,228,.12); font:700 .65rem var(--mono); }
+      .file-button[data-language="python"] .file-icon { color:#f0ce75; background:rgba(240,206,117,.12); }
+      .rail-project { margin:23px 10px 0; padding-top:14px; border-top:1px solid var(--line); color:var(--muted); font-size:.68rem; }
+      .editor-column { min-width:0; display:flex; flex-direction:column; }
+      .editor-toolbar { min-height:48px; display:flex; align-items:center; gap:4px; padding:0 14px; border-bottom:1px solid var(--line); background:var(--panel); }
+      .language-button { min-height:31px; padding:0 12px; border:0; border-radius:5px; color:var(--muted); background:transparent; font-size:.72rem; font-weight:700; }
+      .language-button.is-active { color:var(--ink); background:var(--panel-raised); }
+      .editor-path { margin-left:auto; color:var(--muted); font: .68rem var(--mono); }
+      .editor-shell { min-height:480px; flex:1; background:#101513; }
+      [data-theme="light"] .editor-shell { background:#f8faf7; }
+      .CodeMirror { height:100%; min-height:480px; padding:14px 0; color:#dce6df; background:#101513; font:12.5px/1.75 var(--mono); }
+      [data-theme="light"] .CodeMirror { color:#24372d; background:#f8faf7; }
+      .CodeMirror-gutters { border-right:1px solid rgba(237,242,237,.08); background:transparent; }
+      [data-theme="light"] .CodeMirror-gutters { border-color:var(--line); }
+      .CodeMirror-linenumber { color:#718078; }
+      .CodeMirror-cursor { border-left:1px solid var(--accent); }
+      .cm-s-material-darker.CodeMirror { background:#101513; }
+      .cm-s-material-darker .CodeMirror-gutters { background:#101513; }
+      [data-theme="light"] .cm-s-material-darker.CodeMirror,[data-theme="light"] .cm-s-material-darker .CodeMirror-gutters { background:#f8faf7; }
+      #code-editor { width:100%; min-height:480px; display:block; padding:18px; resize:vertical; border:0; outline:0; color:var(--ink); background:#101513; font:12.5px/1.75 var(--mono); tab-size:4; }
+      [data-theme="light"] #code-editor { background:#f8faf7; }
+      .statusbar { min-height:34px; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:0 14px; border-top:1px solid var(--line); color:var(--muted); font-size:.65rem; }
+      .status-left,.status-right { display:flex; align-items:center; gap:14px; }
+      .statusbar code { color:var(--ink); font:inherit; }
+      .notice { width:min(640px,calc(100% - 40px)); margin:60px auto; padding:28px; border:1px solid var(--line); border-radius:10px; background:var(--panel); text-align:center; }
+      .notice h1 { margin-bottom:9px; }
+      .notice p { margin:0; color:var(--muted); }
+      .notice a { display:inline-flex; margin-top:18px; color:var(--accent); font-weight:700; }
+      @media (max-width:760px) {
+        .topbar { height:58px; gap:12px; padding:0 14px; }
+        .crumb { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .page { padding:25px 14px 30px; }
+        .project-head { align-items:flex-start; flex-direction:column; gap:12px; }
+        .workspace { grid-template-columns:1fr; min-height:0; }
+        .file-rail { display:flex; align-items:center; gap:6px; padding:8px; border-right:0; border-bottom:1px solid var(--line); }
+        .rail-title,.rail-project { display:none; }
+        .file-button { width:auto; padding:8px; }
+        .editor-shell,.CodeMirror,#code-editor { min-height:58vh; }
+        .statusbar { padding:0 8px; }
+        .status-left,.status-right { gap:8px; }
+      }
+      @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition:none !important; } }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../"><img src="../core.png" alt="" /><span>Core</span></a>
+      <span class="top-separator" aria-hidden="true"></span>
+      <div class="crumb"><a href="./">Projects</a><span aria-hidden="true"> / </span><strong class="project-crumb">Workspace</strong></div>
+      <div class="top-actions"><button class="icon-button theme-toggle" type="button" title="Switch theme" aria-label="Switch theme">☼</button><button class="save-button" type="button">Save</button></div>
+    </header>
+    <main class="page" hidden>
+      <div class="project-head"><div><p class="eyebrow">Code workspace</p><h1 class="project-title" contenteditable="true" role="textbox" aria-label="Project name" spellcheck="false">Project</h1><p class="project-description">Edit and save your project files. Choose a language to switch between implementations.</p></div><span class="save-state">All changes saved</span></div>
+      <section class="workspace" aria-label="Project code editor">
+        <aside class="file-rail"><div class="rail-title">Project files</div><button class="file-button is-active" data-language="javascript" type="button"><span class="file-icon">JS</span><span>bot.js</span></button><button class="file-button" data-language="python" type="button"><span class="file-icon">PY</span><span>bot.py</span></button><div class="rail-project">Local project files</div></aside>
+        <div class="editor-column"><div class="editor-toolbar"><button class="language-button is-active" data-language="javascript" type="button">JavaScript</button><button class="language-button" data-language="python" type="button">Python</button><span class="editor-path">src / <span class="file-name">bot.js</span></span></div><div class="editor-shell"><textarea id="code-editor" aria-label="Project source code" spellcheck="false"></textarea></div><footer class="statusbar"><div class="status-left"><span class="language-status">JavaScript</span><span>UTF-8</span><span>Spaces: 4</span></div><div class="status-right"><span class="server-status">No server linked</span><code>Core workspace</code></div></footer></div>
+      </section>
+    </main>
+    <section class="notice missing-project" hidden><h1>Project not found</h1><p>Choose a project from your dashboard to open its code workspace.</p><a href="./">Back to projects</a></section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <script>
+      const profile = JSON.parse(localStorage.getItem("core_profile") || "null");
+      const projectKey = profile?.id ? `core_profile_projects_${profile.id}` : "";
+      const projects = projectKey ? JSON.parse(localStorage.getItem(projectKey) || "[]") : [];
+      const projectId = new URLSearchParams(location.search).get("project");
+      const project = projects.find((item) => item.id === projectId);
+      const page = document.querySelector(".page");
+      const missingProject = document.querySelector(".missing-project");
+      const themeKey = "core_theme";
+      if (localStorage.getItem(themeKey) === "light") document.documentElement.dataset.theme = "light";
+      let activeLanguage = "javascript";
+      let editor = null;
+      const starterFiles = {
+        javascript: `// Core project starter\n// Add your bot logic here.\n\nconst config = {\n  commandPrefix: "!",\n  project: "Core workspace",\n};\n\nfunction handleMessage(message) {\n  if (!message.content.startsWith(config.commandPrefix)) return;\n\n  const command = message.content.slice(config.commandPrefix.length).trim();\n  console.log("Command received:", command);\n}\n\nmodule.exports = { config, handleMessage };\n`,
+        python: `"""Core project starter. Add your bot logic here."""\n\nfrom dataclasses import dataclass\n\n@dataclass\nclass Config:\n    command_prefix: str = "!"\n    project: str = "Core workspace"\n\n\ndef handle_message(content: str) -> None:\n    if not content.startswith(Config.command_prefix):\n        return\n\n    command = content[len(Config.command_prefix):].strip()\n    print(f"Command received: {command}")\n\n\nif __name__ == "__main__":\n    handle_message("!hello")\n`,
+      };
+
+      function saveProject() {
+        if (!project) return;
+        project.name = document.querySelector(".project-title").textContent.trim() || "Untitled project";
+        project.files = project.files || {};
+        project.files[activeLanguage] = editor ? editor.getValue() : document.querySelector("#code-editor").value;
+        localStorage.setItem(projectKey, JSON.stringify(projects));
+        const saveState = document.querySelector(".save-state");
+        saveState.textContent = "All changes saved";
+      }
+
+      function persistEditorState() {
+        if (!project) return;
+        project.name = document.querySelector(".project-title").textContent.trim() || "Untitled project";
+        project.files = project.files || {};
+        project.files[activeLanguage] = editor ? editor.getValue() : document.querySelector("#code-editor").value;
+        localStorage.setItem(projectKey, JSON.stringify(projects));
+        document.querySelector(".save-state").textContent = "Saved locally";
+      }
+
+      if (!project) {
+        missingProject.hidden = false;
+      } else {
+        page.hidden = false;
+        document.querySelector(".project-title").textContent = project.name;
+        document.querySelector(".project-crumb").textContent = project.name;
+        document.querySelector(".server-status").textContent = project.server ? `Linked: ${project.server}` : "No server linked";
+        const textArea = document.querySelector("#code-editor");
+        project.files = project.files || {};
+        Object.keys(starterFiles).forEach((language) => {
+          if (!project.files[language]) project.files[language] = starterFiles[language];
+        });
+        if (window.CodeMirror) {
+          editor = CodeMirror.fromTextArea(textArea, { lineNumbers:true, mode:"javascript", theme:document.documentElement.dataset.theme === "light" ? "default" : "material-darker", indentUnit:4, tabSize:4, lineWrapping:false, viewportMargin:Infinity });
+          editor.setValue(project.files.javascript);
+          editor.on("change", () => {
+            persistEditorState();
+          });
+        } else {
+          textArea.value = project.files.javascript;
+          textArea.addEventListener("input", persistEditorState);
+        }
+        document.querySelectorAll("[data-language]").forEach((button) => button.addEventListener("click", () => {
+          if (button.dataset.language === activeLanguage) return;
+          project.files[activeLanguage] = editor ? editor.getValue() : textArea.value;
+          activeLanguage = button.dataset.language;
+          const isPython = activeLanguage === "python";
+          document.querySelectorAll("[data-language]").forEach((tab) => tab.classList.toggle("is-active", tab.dataset.language === activeLanguage));
+          document.querySelector(".file-name").textContent = isPython ? "bot.py" : "bot.js";
+          document.querySelector(".language-status").textContent = isPython ? "Python" : "JavaScript";
+          if (editor) {
+            editor.setOption("mode", isPython ? "python" : "javascript");
+            editor.setValue(project.files[activeLanguage]);
+          } else textArea.value = project.files[activeLanguage];
+          persistEditorState();
+        }));
+        document.querySelector(".save-button").addEventListener("click", saveProject);
+        document.querySelector(".project-title").addEventListener("input", () => {
+          project.name = document.querySelector(".project-title").textContent.trim() || "Untitled project";
+          document.querySelector(".project-crumb").textContent = project.name;
+          persistEditorState();
+        });
+        document.querySelector(".theme-toggle").addEventListener("click", () => {
+          const light = document.documentElement.dataset.theme !== "light";
+          document.documentElement.dataset.theme = light ? "light" : "dark";
+          localStorage.setItem(themeKey, light ? "light" : "dark");
+          if (editor) editor.setOption("theme", light ? "default" : "material-darker");
+        });
+        window.addEventListener("beforeunload", saveProject);
+      }
+    </script>
+  </body>
+</html>
